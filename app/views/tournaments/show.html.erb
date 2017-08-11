@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+
+<% if @tournament.main_stage? %>
+  <h2>Current Stage: Bracket</h2>
+  <br>
+  <ul class="list-group">
+    <% @matches.each do |match| %>
+      <li class="list-group-item"> <%= link_to "#{match.name}", match_path(match) %></li>
+    <% end %>
+  </ul>
+<% elsif @tournament.qualifier_stage? %>
+  <h2>Current Stage: Qualifiers</h2>
+  <%= react_component("Stage_Qualifier", {qualifiers: @qualifiers, not_qualified: @not_qualified_json, ties: @tiebreaker, qualified: @qualified_json, tournament_id: @tournament.id}, {prerender: true}) %>
+  <%= link_to 'Start Tournament', tournament_start_path(@tournament), :class => "btn btn-primary" %>
+  <br>
+<% else %>
+  <h2>Current Stage: Pre-Qualifiers</h2>
+  <%= react_component("PreQualifiers", {qualifiers: @qualifiers}, {prerender: true}) %>
+  <%= link_to 'Start Qualifiers', tournament_qualifier_start_path(@tournament), :class => "btn btn-primary" %>
+  <br>
+<% end %>
+
+<%= link_to 'Edit', edit_tournament_path(@tournament) %> |
+<%= link_to 'Back', tournaments_path %>

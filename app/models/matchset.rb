@@ -1,0 +1,2 @@
+class Matchset < ApplicationRecord
+end
