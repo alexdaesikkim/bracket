@@ -15,70 +15,8 @@ var Match = React.createClass({
     })
   },
 
-
-
-/*
-  handleSubmitMatch(player){
-    var qualified_players = this.state.qualified;
-
-    var index = qualified_players.length
-    for(var i = 0; i < qualified_players.length; i++){
-      if(player.seed <= qualified_players[i].seed){
-        index = i;
-        i = qualified_players.length;
-      }
-    }
-
-    qualified_players.splice(index, 0, player);
-
-    for(var i = index+1; i < qualified_players.length; i++){
-      qualified_players[i].seed++;
-    }
-
-    this.setState({
-      qualified: qualified_players
-    });
-
-    var not_qualified_players = this.state.not_qualified.filter(function(p) {
-      return player.id !== p.id;
-    });
-
-    this.setState({
-      not_qualified: not_qualified_players
-    });
-  },
-
-  handleAddMatch(){
-    var that = this;
-    $.ajax({
-      method: 'POST',
-      data: {
-        player: that.state.player
-      },
-      url: '/players.json',
-      success: function(data){
-        var newNotQualifiedList = that.state.not_qualified;
-        newNotQualifiedList.push(data);
-        that.setState({
-          not_qualified: newNotQualifiedList,
-          player:{
-            name: '',
-            phone: '',
-            email: '',
-            tournament_id: that.props.tournament_id
-          },
-          addPlayer: false
-        });
-      },
-      error: function(error){
-        that.setState({errors: data.responseJSON.errors})
-      }
-    });
-  },
-*/
-
   render: function() {
-    var addSet = this.handleAddSet
+    var addSet = this.handleAddSet;
 
     return (
       <div>
@@ -137,11 +75,9 @@ var MatchPlayer = React.createClass({
 
   submitAddSet(){
     this.setState({
-      addmatch: false;
+      addmatch: false
     });
-
-    addSetToMatches(set, player);
-  }
+  },
 /*
   handleAddSet(){
     var that = this;
@@ -208,7 +144,6 @@ var MatchPlayer = React.createClass({
           </center>
           {this.addMatchPlayer()}
         </div>
-      </div>
       </div>
     );
   }
