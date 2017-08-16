@@ -27,8 +27,16 @@ var Match = React.createClass({
               <center><h3>{this.state.player1.name} VS {this.state.player2.name}</h3></center>
               <br/>
             </div>
-            <MatchPlayer key={this.state.player1.name} player={this.state.player1} addMatchToSet={addSet} />
-            <MatchPlayer key={this.state.player2.name} player={this.state.player2} addMatchToSet={addSet} />
+            <div className="col col-sm-12 col-md-6">
+              <center>
+                <MatchPlayer key={this.state.player1.name} player={this.state.player1} addSetToMatch={addSet} />
+              </center>
+            </div>
+            <div className="col col-sm-12 col-md-6 center">
+              <center>
+                <MatchPlayer key={this.state.player2.name} player={this.state.player2} addSetToMatch={addSet} />
+              </center>
+            </div>
           </div>
         </div>
       </div>
@@ -45,7 +53,7 @@ var MatchPlayer = React.createClass({
         name: '',
         level: '',
         difficulty: '',
-        player: ''
+        player: this.props.player.id
       }
     };
   },
@@ -62,7 +70,7 @@ var MatchPlayer = React.createClass({
   },
 
   handleSongLevelChange(event){
-    var song = this.state.song_p1;
+    var song = this.state.song;
     song.level = event.target.value;
     this.setState({song: song});
   },
@@ -74,8 +82,15 @@ var MatchPlayer = React.createClass({
   },
 
   submitAddSet(){
+    this.props.addSetToMatch(this.state.song);
     this.setState({
-      addmatch: false
+      addmatch: false,
+      song: {
+        name: '',
+        level: '',
+        difficulty: '',
+        player: this.state.player.id
+      }
     });
   },
 /*
@@ -136,14 +151,10 @@ var MatchPlayer = React.createClass({
   render: function() {
     return (
       <div>
-        <div className="col col-sm-12 col-md-6">
-          <center>
-            <strong>{this.state.player.name}</strong>
-            <br/>
-            <button className="btn btn-primary" onClick = {this.handleAddMatchForm}>Add New Set {this.state.player.name}</button>
-          </center>
-          {this.addMatchPlayer()}
-        </div>
+        <strong>{this.state.player.name}</strong>
+        <br/>
+        <button className="btn btn-primary" onClick = {this.handleAddMatchForm}>Add New Set {this.state.player.name}</button>
+        {this.addMatchPlayer()}
       </div>
     );
   }
