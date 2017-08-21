@@ -6,12 +6,6 @@ var Sets = React.createClass({
     };
   },
 
-
-  handleUpdateScore(){
-
-  },
-
-
   render: function() {
     return (
       <div>
@@ -19,7 +13,7 @@ var Sets = React.createClass({
         <div>
           <div className="row">
             <div className="col-12">
-              <center><h5>{this.props.set.song_name}</h5></center>
+              <center><h5>{this.props.set.name}</h5></center>
               <br/>
             </div>
             <div className="col-6">
@@ -70,7 +64,7 @@ var SetScore = React.createClass({
   },
 
   playerScoreForm(){
-    if(this.state.saved){
+    if(!this.state.saved){
       return(
         <div className="form-group">
           <input type="text" className="form-control input-sm" value={this.state.score} onChange={this.handleScoreChange}/>
@@ -93,7 +87,8 @@ var SetScore = React.createClass({
   render: function(){
     return(
       <div>
-        {this.player_score_form}
+        TESTING STUFF PLEASE DONt MIND
+        {this.playerScoreForm()}
       </div>
     );
   }

@@ -1,22 +1,28 @@
 var Match = React.createClass({
   getInitialState() {
     return {
-      sets: this.props.matches || [],
+      matchsets: this.props.matches || [],
       player1: this.props.player1,
       player2: this.props.player2
     };
   },
 
   handleAddSet(set){
-    var newSets = this.state.sets;
+    var newSets = this.state.matchsets;
     newSets.push(set);
     this.setState({
-      sets: newSets
+      matchsets: newSets
     })
   },
 
   render: function() {
     var addSet = this.handleAddSet;
+
+    var matchSets = this.state.matchsets.map( function(set) {
+      return (
+        <Sets set={set} key={"set_"+set.id} />
+      );
+    });
 
     return (
       <div>
@@ -38,6 +44,9 @@ var Match = React.createClass({
               </center>
             </div>
           </div>
+          <div className="row">
+            {matchSets}
+          </div>
         </div>
       </div>
     );
@@ -49,10 +58,12 @@ var MatchPlayer = React.createClass({
     return {
       player: this.props.player,
       addmatch: false,
-      song: {
+      matchset: {
         name: '',
         level: '',
         difficulty: '',
+        player1_score: 0,
+        player2_score: 0,
         player: this.props.player.id
       }
     };
@@ -64,31 +75,33 @@ var MatchPlayer = React.createClass({
   },
 
   handleSongNameChange(event){
-    var song = this.state.song;
-    song.name = event.target.value;
-    this.setState({song: song});
+    var matchset = this.state.matchset;
+    matchset.name = event.target.value;
+    this.setState({matchset: matchset});
   },
 
   handleSongLevelChange(event){
-    var song = this.state.song;
-    song.level = event.target.value;
-    this.setState({song: song});
+    var matchset = this.state.matchset;
+    matchset.level = event.target.value;
+    this.setState({matchset: matchset});
   },
 
   handleSongDifficultyChange(event){
-    var song = this.state.song;
-    song.difficulty = event.target.value;
-    this.setState({song: song});
+    var matchset = this.state.matchset;
+    matchset.difficulty = event.target.value;
+    this.setState({matchset: matchset});
   },
 
   submitAddSet(){
-    this.props.addSetToMatch(this.state.song);
+    this.props.addSetToMatch(this.state.matchset);
     this.setState({
       addmatch: false,
-      song: {
+      matchset: {
         name: '',
         level: '',
         difficulty: '',
+        player1_score: 0,
+        player2_score: 0,
         player: this.state.player.id
       }
     });
@@ -130,15 +143,15 @@ var MatchPlayer = React.createClass({
         <div className="form-group">
           <div>
             Song Name:
-            <input type="text" className="form-control input-sm" id="name" value={this.state.song.name} onChange={this.handleSongNameChange} />
+            <input type="text" className="form-control input-sm" id="name" value={this.state.matchset.name} onChange={this.handleSongNameChange} />
           </div>
           <div>
             Song Level:
-            <input type="text" className="form-control input-sm" id="level" value={this.state.song.level} onChange={this.handleSongLevelChange} />
+            <input type="text" className="form-control input-sm" id="level" value={this.state.matchset.level} onChange={this.handleSongLevelChange} />
           </div>
           <div>
             Song Difficulty:
-            <input type="text" className="form-control input-sm" id="difficulty" value={this.state.song.difficulty} onChange={this.handleSongDifficultyChange} />
+            <input type="text" className="form-control input-sm" id="difficulty" value={this.state.matchset.difficulty} onChange={this.handleSongDifficultyChange} />
           </div>
           <br/>
           <button className="btn btn-primary" onClick={this.submitAddSet}>Add Set</button>
