@@ -1,7 +1,8 @@
 var Match = React.createClass({
   getInitialState() {
     return {
-      matchsets: this.props.matches || [],
+      match_id: this.props.match_id,
+      matchsets: this.props.matchesets || [],
       player1: this.props.player1,
       player2: this.props.player2
     };
@@ -38,13 +39,13 @@ var Match = React.createClass({
                 <MatchPlayer key={this.state.player1.name} player={this.state.player1} addSetToMatch={addSet} />
               </center>
             </div>
-            <div className="col col-sm-12 col-md-6 center">
+            <div className="col col-sm-12 col-md-6">
               <center>
                 <MatchPlayer key={this.state.player2.name} player={this.state.player2} addSetToMatch={addSet} />
               </center>
             </div>
           </div>
-          <div className="row">
+          <div>
             {matchSets}
           </div>
         </div>
@@ -58,6 +59,7 @@ var MatchPlayer = React.createClass({
     return {
       player: this.props.player,
       addmatch: false,
+      match_id: this.props.match_id,
       matchset: {
         name: '',
         level: '',
@@ -106,36 +108,36 @@ var MatchPlayer = React.createClass({
       }
     });
   },
-/*
+
   handleAddSet(){
     var that = this;
     $.ajax({
       method: 'POST',
       data: {
-        song: that.state.song
-        player: that.state.player
+        picked_player_id: that.state.player.id,
+        matchset: that.state.matchset,
+        match_id:
       },
       url: '/matchsets.json',
       success: function(data){
-        var newNotQualifiedList = that.state.not_qualified;
-        newNotQualifiedList.push(data);
+        that.props.addSetToMatch(data);
         that.setState({
-          not_qualified: newNotQualifiedList,
-          player:{
+          addmatch: false,
+          matchset: {
             name: '',
-            phone: '',
-            email: '',
-            tournament_id: that.props.tournament_id
-          },
-          addPlayer: false
+            level: '',
+            difficulty: '',
+            player1_score: 0,
+            player2_score: 0,
+            player: this.state.player.id
+          }
         });
       },
       error: function(error){
         that.setState({errors: data.responseJSON.errors})
       }
     });
-  }
-*/
+  },
 
   addMatchPlayer(){
     if(this.state.addmatch == true){
@@ -154,7 +156,7 @@ var MatchPlayer = React.createClass({
             <input type="text" className="form-control input-sm" id="difficulty" value={this.state.matchset.difficulty} onChange={this.handleSongDifficultyChange} />
           </div>
           <br/>
-          <button className="btn btn-primary" onClick={this.submitAddSet}>Add Set</button>
+          <button className="btn btn-primary" onClick={this.handleAddSet}>Add Set</button>
         </div>
       );
     }

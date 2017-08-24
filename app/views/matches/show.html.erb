@@ -1,41 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Challonge match:</strong>
-  <%= @match.challonge_match_id %>
-</p>
-
-<p>
-  <strong>Tournament:</strong>
-  <%= @match.tournament_id %>
-</p>
-
-<p>
-  <strong>Player1:</strong>
-  <%= @match.player1_id %>
-</p>
-
-<p>
-  <strong>Player2:</strong>
-  <%= @match.player2_id %>
-</p>
-
-<p>
-  <strong>Player1 score:</strong>
-  <%= @match.player1_score %>
-</p>
-
-<p>
-  <strong>Player2 score:</strong>
-  <%= @match.player2_score %>
-</p>
-
-<p>
-  <strong>Winner:</strong>
-  <%= @match.winner_id %>
-</p>
-
-<%= react_component("Match", {player1: @player1, player2: @player2}, {prerender: true}) %>
+<%= react_component("Match", {match_id: @match.id, player1: @player1, player2: @player2, matchsets: @matchsets}, {prerender: true}) %>
 
 
 <%= link_to 'Edit', edit_match_path(@match) %> |

@@ -29,7 +29,7 @@ class MatchsetsController < ApplicationController
     respond_to do |format|
       if @matchset.save
         format.html { redirect_to @matchset, notice: 'Matchset was successfully created.' }
-        format.json { render :show, status: :created, location: @matchset }
+        format.json { render json: @matchset.to_json }
       else
         format.html { render :new }
         format.json { render json: @matchset.errors, status: :unprocessable_entity }
@@ -69,6 +69,6 @@ class MatchsetsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def matchset_params
-      params.require(:matchset).permit(:song_name, :picked_player_id, :player1_score, :player2_score, :match_id)
+      params.require(:matchset).permit(:name, :difficulty, :level, :picked_player_id, :player1_score, :player2_score, :match_id)
     end
 end

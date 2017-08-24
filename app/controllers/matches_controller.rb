@@ -12,7 +12,7 @@ class MatchesController < ApplicationController
   def show
     @player1 = Player.find(@match.player1_id)
     @player2 = Player.find(@match.player2_id)
-    
+    @matchsets = @match.matchsets
   end
 
   # GET /matches/new

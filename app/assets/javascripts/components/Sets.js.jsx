@@ -10,18 +10,22 @@ var Sets = React.createClass({
     return (
       <div>
         <br/>
-        <div>
-          <div className="row">
-            <div className="col-12">
-              <center><h5>{this.props.set.name}</h5></center>
+        <div className="row">
+          <div className="col-12">
+            <center>
+              <h3>{this.props.set.name}</h3>
               <br/>
-            </div>
-            <div className="col-6">
-              <SetScore key = {"p1_"+this.state.set.id} setId = {this.state.set.id} score = {this.state.set.player1_score} />
-            </div>
-            <div className="col-6">
-              <SetScore key = {"p2_"+this.state.set.id} setId = {this.state.set.id} score = {this.state.set.player2_score} />
-            </div>
+              <h5>{this.props.set.difficulty} {this.props.set.level}</h5>
+            </center>
+            <br/>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-6">
+            <SetScore key = {"p1_"+this.state.set.id} setId = {this.state.set.id} score = {this.state.set.player1_score} />
+          </div>
+          <div className="col-6">
+            <SetScore key = {"p2_"+this.state.set.id} setId = {this.state.set.id} score = {this.state.set.player2_score} />
           </div>
         </div>
       </div>
@@ -46,10 +50,12 @@ var SetScore = React.createClass({
 
 
   handleEditMode(){
-    var x = !this.state.saved;
-    this.setState({
-      saved: x
-    });
+    if(this.state.score != 0 && this.state.saved == false){
+      var x = !this.state.saved;
+      this.setState({
+        saved: x
+      });
+    }
   },
 
   submitPlayerScore(){
