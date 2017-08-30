@@ -2,8 +2,47 @@ var Sets = React.createClass({
   getInitialState() {
     return {
       set: this.props.set,
-      saved: ((this.props.set.player1_score != 0) && (this.props.set.player2_score != 0))
+      saved: this.props.set.saved,
+      player1_score: this.props.set.player1_score,
+      player2_score: this.props.set.player2_score
     };
+  },
+
+  setForm(){
+    if(!this.state.saved){
+      return (
+        <div>
+          <div className="row">
+            <div className="col-6">
+              <SetScore key = {"p1_"+this.state.set.id} setId = {this.state.set.id} score = {this.state.set.player1_score} />
+            </div>
+            <div className="col-6">
+              <SetScore key = {"p2_"+this.state.set.id} setId = {this.state.set.id} score = {this.state.set.player2_score} />
+            </div>
+          </div>
+          <center>
+            <button className="btn btn-primary">Submit Set</button>
+          </center>
+        </div>
+      )
+    }
+    else{
+      return (
+        <div>
+          <div className="row">
+            <div className="col-6">
+              <center>{this.state.set.player1_score}</center>
+            </div>
+            <div className="col-6">
+              <center>{this.state.set.player2_score}</center>
+            </div>
+          </div>
+          <center>
+            <button className="btn btn-warning">Edit Set</button>
+          </center>
+        </div>
+      )
+    }
   },
 
   render: function() {
@@ -20,14 +59,7 @@ var Sets = React.createClass({
             <br/>
           </div>
         </div>
-        <div className="row">
-          <div className="col-6">
-            <SetScore key = {"p1_"+this.state.set.id} setId = {this.state.set.id} score = {this.state.set.player1_score} />
-          </div>
-          <div className="col-6">
-            <SetScore key = {"p2_"+this.state.set.id} setId = {this.state.set.id} score = {this.state.set.player2_score} />
-          </div>
-        </div>
+        {this.setForm()}
       </div>
     );
   }
@@ -74,8 +106,7 @@ var SetScore = React.createClass({
       return(
         <div className="form-group">
           <input type="text" className="form-control input-sm" value={this.state.score} onChange={this.handleScoreChange}/>
-          <button className="btn btn-primary">Submit</button>
-          <button className="btn btn-warning" onClick={this.handleEditMode}>Cancel</button>
+          <button className="btn btn-info">Submit Score</button>
         </div>
       );
     }
@@ -93,7 +124,6 @@ var SetScore = React.createClass({
   render: function(){
     return(
       <div>
-        TESTING STUFF PLEASE DONt MIND
         {this.playerScoreForm()}
       </div>
     );

@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<%= react_component("Match", {match_id: @match.id, player1: @player1, player2: @player2, matchsets: @matchsets}, {prerender: true}) %>
+<%= react_component("Match", {match: @match, player1: @player1, player2: @player2, matchsets: @matchsets}, {prerender: true}) %>
 
 
 <%= link_to 'Edit', edit_match_path(@match) %> |

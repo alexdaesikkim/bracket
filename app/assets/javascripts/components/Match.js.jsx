@@ -1,10 +1,12 @@
 var Match = React.createClass({
   getInitialState() {
     return {
-      match_id: this.props.match_id,
-      matchsets: this.props.matchesets || [],
+      match_id: this.props.match.id,
+      matchsets: this.props.matchsets || [],
       player1: this.props.player1,
-      player2: this.props.player2
+      player2: this.props.player2,
+      player1_score: this.props.match.player1_score,
+      player2_score: this.props.match.player2_score
     };
   },
 
@@ -14,6 +16,20 @@ var Match = React.createClass({
     this.setState({
       matchsets: newSets
     })
+  },
+
+  handleScoreUpdate(){
+    var p1_score = this.state.matchsets.filter( function(set){
+      return(set.player1_score > set.player2_score);
+    }).count;
+    var p2_score = this.state.matchsets.filter( function(set){
+      return(set.player2_score > set.player1_score);
+    }).count;
+
+    this.setState({
+      player1_score: p1_score,
+      player2_score: p2_score
+    });
   },
 
   render: function() {
@@ -31,17 +47,20 @@ var Match = React.createClass({
         <div>
           <div className="row">
             <div className="col-12">
-              <center><h3>{this.state.player1.name} VS {this.state.player2.name}</h3></center>
+              <center><h3>{this.state.player1.name} VS {this.state.player2.name}</h3>
               <br/>
-            </div>
-            <div className="col col-sm-12 col-md-6">
-              <center>
-                <MatchPlayer key={this.state.player1.name} player={this.state.player1} addSetToMatch={addSet} />
+              <h3>{this.state.player1_score} - {this.state.player2_score}</h3>
+              <br/>
               </center>
             </div>
             <div className="col col-sm-12 col-md-6">
               <center>
-                <MatchPlayer key={this.state.player2.name} player={this.state.player2} addSetToMatch={addSet} />
+                <MatchPlayer key={this.state.player1.name} match_id={this.state.match_id} player={this.state.player1} addSetToMatch={addSet} />
+              </center>
+            </div>
+            <div className="col col-sm-12 col-md-6">
+              <center>
+                <MatchPlayer key={this.state.player2.name} match_id={this.state.match_id} player={this.state.player2} addSetToMatch={addSet} />
               </center>
             </div>
           </div>
@@ -57,17 +76,17 @@ var Match = React.createClass({
 var MatchPlayer = React.createClass({
   getInitialState() {
     return {
-      player: this.props.player,
       addmatch: false,
-      match_id: this.props.match_id,
       matchset: {
         name: '',
         level: '',
         difficulty: '',
         player1_score: 0,
         player2_score: 0,
-        player: this.props.player.id
-      }
+        picked_player_id: this.props.player.id,
+        match_id: this.props.match_id
+      },
+      player: this.props.player
     };
   },
 
@@ -94,29 +113,12 @@ var MatchPlayer = React.createClass({
     this.setState({matchset: matchset});
   },
 
-  submitAddSet(){
-    this.props.addSetToMatch(this.state.matchset);
-    this.setState({
-      addmatch: false,
-      matchset: {
-        name: '',
-        level: '',
-        difficulty: '',
-        player1_score: 0,
-        player2_score: 0,
-        player: this.state.player.id
-      }
-    });
-  },
-
   handleAddSet(){
     var that = this;
     $.ajax({
       method: 'POST',
       data: {
-        picked_player_id: that.state.player.id,
-        matchset: that.state.matchset,
-        match_id:
+        matchset: that.state.matchset
       },
       url: '/matchsets.json',
       success: function(data){
@@ -129,8 +131,10 @@ var MatchPlayer = React.createClass({
             difficulty: '',
             player1_score: 0,
             player2_score: 0,
-            player: this.state.player.id
-          }
+            picked_player_id: that.props.player.id,
+            match_id: that.props.match_id
+          },
+          player: that.props.player
         });
       },
       error: function(error){
