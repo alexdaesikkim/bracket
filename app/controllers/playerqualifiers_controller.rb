@@ -9,7 +9,7 @@ class PlayerqualifiersController < ApplicationController
         # TODO: Some of these logic should be backend not controller end
         score = @player.calculate_score
         @lower_seed = Player.where("qualifier_score > ?", score)
-        @higher_seed = Player.where("qualifier_score =< ?", score)
+        @higher_seed = Player.where("qualifier_score <= ?", score)
         @player.qualifier_score = score
         @player.seed = @lower_seed.count + 1
         @player.save

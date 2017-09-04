@@ -5,7 +5,8 @@ var PreQualifiers = React.createClass({
       qualifier:{
         name: '',
         difficulty: '',
-        level: ''
+        level: '',
+        tournament_id: this.props.tournament_id
       },
       random:{
         song_min: 0,
@@ -40,8 +41,7 @@ var PreQualifiers = React.createClass({
     $.ajax({
       method: 'POST',
       data: {
-        qualifier: this.state.qualifier,
-        tournament_id: this.props.tournament_id
+        qualifier: this.state.qualifier
       },
       url: '/qualifiers.json',
       success: function(data){
@@ -52,7 +52,8 @@ var PreQualifiers = React.createClass({
           qualifier:{
             name:'',
             difficulty:'',
-            level:''
+            level:'',
+            tournament_id: that.props.tournament_id
           },
           errors: {},
         });

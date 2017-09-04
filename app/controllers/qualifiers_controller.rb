@@ -25,9 +25,9 @@ class QualifiersController < ApplicationController
   # POST /qualifiers.json
   def create
     @qualifier = Qualifier.new(qualifier_params)
-    @qualifier.tournament_id = params[:tournament_id]
     puts @qualifier.name
     puts @qualifier.number
+    puts @qualifier.tournament_id
     @qualifier.number = Qualifier.all.count + 1
 
     respond_to do |format|
@@ -81,6 +81,6 @@ class QualifiersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def qualifier_params
-      params.require(:qualifier).permit(:name, :number, :level, :difficulty, :tiebreaker)
+      params.require(:qualifier).permit(:name, :number, :level, :difficulty, :tiebreaker, :tournament_id)
     end
 end
