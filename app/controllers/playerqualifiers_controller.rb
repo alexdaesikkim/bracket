@@ -6,6 +6,7 @@ class PlayerqualifiersController < ApplicationController
     if @playerqualifier.save
       @player = Player.find(params[:player_id])
       if @player.qualified
+        # TODO: Some of these logic should be backend not controller end
         score = @player.calculate_score
         @lower_seed = Player.where("qualifier_score > ?", score)
         @higher_seed = Player.where("qualifier_score =< ?", score)

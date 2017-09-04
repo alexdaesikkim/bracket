@@ -16,4 +16,11 @@ class Match < ApplicationRecord
     player = self.players.find(self.player2_id)
     return player.name
   end
+
+  def update_score
+    p1_score = self.matchsets.select{ |x| x.player1_score > player2_score}
+    p2_score = self.matchsets.select{ |x| x.player2_score > player1_score}
+    self.update_attributes(:player1_score => p1_score, :player2_score => p2_score)
+  end
+  
 end
