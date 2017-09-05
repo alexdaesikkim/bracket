@@ -17,7 +17,7 @@ class TournamentsController < ApplicationController
     @not_qualified = @all_players.where(qualifier_score: nil).includes(playerqualifiers: :qualifier)
     @qualified = @all_players.where("qualifier_score IS NOT NULL", :order => "seed ASC").includes(playerqualifiers: :qualifier)
     @not_qualified_json = @not_qualified.as_json(:include => {:playerqualifiers => {include: :qualifier}})
-    @qualified_json = @qualified.as_json(:include => {:playerqualifiers => {include: :qualifier}})
+    @qualified_json = @qualified.order("seed ASC").as_json(:include => {:playerqualifiers => {include: :qualifier}})
     @qualifiers = Qualifier.where("tournament_id = ?", @tournament.id)
     @tiebreaker_scores = @qualified.select(:qualifier_score).group(:qualifier_score).having("count(*) > 1")
     @tiebreaker = @qualified.select(:qualifier_score).group_by(&:qualifier_score).sort_by{|key, values| key}.to_json
