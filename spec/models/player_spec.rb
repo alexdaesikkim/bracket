@@ -18,7 +18,7 @@ RSpec.describe Player, type: :model do
 
     player2.update_seed
 
-    #test is currently failing due to lak of playerqualifiers
+    #test is currently failing due to lack of playerqualifiers
     #todo: get some help on this to make sure i dont ahve to re-write model every single time
     #FACTORYGIRL!!!
     expect(player2.qualifier_score).to eq(600)
