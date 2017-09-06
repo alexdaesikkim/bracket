@@ -14,7 +14,7 @@ var Not_Qualified = React.createClass({
     this.setState({
       player_qualifiers: playerqualifiers
     }, function(){
-      this.checkQualifierFinished()
+      this.checkQualifierFinished();
     });
   },
 

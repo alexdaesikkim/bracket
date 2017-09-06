@@ -5,16 +5,7 @@ class PlayerqualifiersController < ApplicationController
     @playerqualifier.submitted = true
     if @playerqualifier.save
       @player = Player.find(params[:player_id])
-      if @player.qualified
-        # TODO: Some of these logic should be backend not controller end
-        score = @player.calculate_score
-        @lower_seed = Player.where("qualifier_score > ?", score)
-        @higher_seed = Player.where("qualifier_score <= ?", score)
-        @player.qualifier_score = score
-        @player.seed = @lower_seed.count + 1
-        @player.save
-        @higher_seed.update_all("seed = seed + 1")
-      end
+      @player.qualified
       respond_to do |format|
         format.json {render :json => @playerqualifier}
       end
