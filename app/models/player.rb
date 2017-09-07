@@ -27,20 +27,13 @@ class Player < ApplicationRecord
   def update_seed
     prev_score = self.qualifier_score
     new_score = self.calculate_score
-    if(self.qualifier_score <= prev_score)
+    if(self.qualifier_score < prev_score)
       puts "Lowering the seed"
       #case of moving down the seed
       lower_seed = Player.where("qualifier_score < ? AND id != ?", prev_score, self.id)
-      puts lower_seed.count
-
       update_lower_seed = lower_seed.where("qualifier_score > ?", new_score)
       update_lower_seed.update_all("seed = seed - 1")
-
-      puts update_lower_seed.count
-
       new_seed = self.seed + update_lower_seed.count
-
-      puts new_seed
 
       #edgecase: how to deal with tiebreakers?
       self.update_attributes(:seed => new_seed)

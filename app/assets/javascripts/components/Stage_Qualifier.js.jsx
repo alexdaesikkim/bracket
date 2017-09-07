@@ -15,7 +15,7 @@ var Stage_Qualifier = React.createClass({
     };
   },
 
-  handlePlayerQualified(player){
+  handlePlayerQualified(player, playerqualifiers){
     var qualified_players = this.state.qualified;
 
     var index = qualified_players.length
@@ -25,6 +25,8 @@ var Stage_Qualifier = React.createClass({
         i = qualified_players.length;
       }
     }
+
+    player.playerqualifiers = qualifiers;
 
     player.seed = index;
 

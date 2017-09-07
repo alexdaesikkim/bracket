@@ -88,11 +88,9 @@ class TournamentsController < ApplicationController
   def start
     @tournament = Tournament.find(params[:id])
     api = Challonge.new()
-    @tournament.main_stage = true
-    @tournament.save
 
-    @players = Player.where("tournament_id = ?", @tournament.id)
-    @players.map do |p|
+    @players = Player.where("tournament_id = ?", @tournament.id).order("seed ASC")
+    @players.each do |p|
       raw_response = api.add_participant(p.name, p.email, p.seed, @tournament.challonge_tournament_id)
       response = JSON.parse(raw_response)
       p.challonge_player_id = response["participant"]["id"]
@@ -135,6 +133,9 @@ class TournamentsController < ApplicationController
       @matchset1.save
       @matchset2.save
     end
+
+    @tournament.main_stage = true
+    @tournament.save
 
     respond_to do |format|
       format.html {redirect_to @tournament}
