@@ -86,12 +86,15 @@ class TournamentsController < ApplicationController
   end
 
   def start
+
+    #todo: most of this code should be backend
+    #todo: how to test API calls?
     @tournament = Tournament.find(params[:id])
     api = Challonge.new()
 
     @players = Player.where("tournament_id = ?", @tournament.id).order("seed ASC")
     @players.each do |p|
-      raw_response = api.add_participant(p.name, p.email, p.seed, @tournament.challonge_tournament_id)
+      raw_response = api.add_participant(p.name, p.seed, @tournament.challonge_tournament_id)
       response = JSON.parse(raw_response)
       p.challonge_player_id = response["participant"]["id"]
       p.save
