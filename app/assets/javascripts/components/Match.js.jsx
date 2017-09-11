@@ -18,27 +18,13 @@ var Match = React.createClass({
     })
   },
 
-  //todo: have another function where i can find the set from matchsets and update the info. send the match information from previous, ajax call here, and then update
-  //difference between individual score ajax vs ajax here: I don't think I technically need to do ajax call until I get the score settled later down the line
-  //however I need the updated info here to make sure I can calculate the scores
-  //unless I find a different way to settle score without editing the matchsets property here (i believe editing it down the line does not change the state up here, and that's what's happening?)
-  //-1, 0, 1?
-
-  handleOverallScoreUpdate(flag){
-    var p1_score = this.state.player1_score;
-    var p2_score = this.state.player2_score;
-    if(flag > 0){
-      if(flag == 1){
-        p1_score++;
-      }
-      else p2_score++;
-    }
-    else if(flag < 0){
-      if(flag == -1){
-        p1_score--;
-      }
-      else p2_score--;
-    }
+  handleScoreUpdate(){
+    var p1_score = this.state.matchsets.filter( function(set){
+      return(set.player1_score > set.player2_score);
+    }).count;
+    var p2_score = this.state.matchsets.filter( function(set){
+      return(set.player2_score > set.player1_score);
+    }).count;
 
     this.setState({
       player1_score: p1_score,
@@ -48,11 +34,10 @@ var Match = React.createClass({
 
   render: function() {
     var addSet = this.handleAddSet;
-    var handleScore = this.handleOverallScoreUpdate;
 
     var matchSets = this.state.matchsets.map( function(set) {
       return (
-        <Sets set={set} key={"set_"+set.id} update={handleScore}/>
+        <Sets set={set} key={"set_"+set.id} />
       );
     });
 

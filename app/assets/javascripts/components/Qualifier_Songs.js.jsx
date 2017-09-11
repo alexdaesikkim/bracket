@@ -6,10 +6,13 @@ var Qualifier_Songs = React.createClass({
   },
 
   handleRemoveSong(){
+    //was VERY HACKY T_T
+    //reminder: ajax variables don't work that well, assign something else before calling "this.state" within ajax success call
+    //long time goal: figure out why this is a thing
     var that = this;
     $.ajax({
       method: 'DELETE',
-      url: '/qualifiers/' + that.state.song.id + '.json',
+      url: '/qualifiers/' + this.state.song.id + '.json',
       success: function(data) {
         that.props.removeSong(that.state.song);
       }

@@ -3,95 +3,9 @@ var Sets = React.createClass({
     return {
       set: this.props.set,
       saved: this.props.set.saved,
-      p1_saved: (this.props.set.player1_score != 0),
-      p2_saved: (this.props.set.player2_score != 0),
       player1_score: this.props.set.player1_score,
       player2_score: this.props.set.player2_score
     };
-  },
-
-  handleChangeScoreForm(){
-    if(this.state.p1_saved && this.state.p2_saved){
-      this.setState({
-        saved: true
-      });
-    }
-  },
-
-  handleP1ScoreUpdate(score){
-    //do the ajax call here for score
-    var that = this;
-    $.ajax({
-      method: 'PUT',
-      data: {
-        matchset:{
-          player1_score: score
-        }
-      },
-      url: '/matchsets/' + that.props.set.id + '.json',
-      success: function(data){
-        that.setState({
-          player1_score: score,
-          p1_saved: true
-        });
-        if(that.state.p2_saved){
-          that.setState({
-            saved: true
-          });
-          //call parent function
-          var flag = 0;
-          if(score > that.state.player2_score) flag = 1;
-          else if (that.state.player2_score > score) flag = 2;
-          that.props.update(flag);
-        }
-      },
-      error: function(error){
-        that.setState({errors: data.responseJSON.errors})
-      }
-    });
-  },
-
-  handleP2ScoreUpdate(score){
-    var that = this;
-    $.ajax({
-      method: 'PATCH',
-      data: {
-        matchset:{
-          player2_score: score
-        }
-      },
-      url: '/matchsets/' + that.props.set.id + '.json',
-      success: function(data){
-        that.setState({
-          player2_score: score,
-          p2_saved: true
-        });
-        if(that.state.p1_saved){
-          that.setState({
-            saved: true
-          })
-          var flag = 0;
-          if(that.state.player1_score > score) flag = 1;
-          else if(score > that.state.player1_score) flag = 2;
-          that.props.update(flag);
-        }
-      },
-      error: function(error){
-        that.setState({errors: data.responseJSON.errors})
-      }
-    });
-  },
-
-  handleEditSetScore(){
-    var flag = 0;
-    if(this.state.player1_score > this.state.player2_score) flag = -1;
-    else if (this.state.player2_score > this.state.player1_score) flag = -2;
-    this.props.update(flag);
-    this.setState({
-      p1_saved: false,
-      p2_saved: false,
-      saved: false
-    });
   },
 
   setForm(){
@@ -100,71 +14,34 @@ var Sets = React.createClass({
         <div>
           <div className="row">
             <div className="col-6">
-              <SetScore key = {"p1_"+this.state.set.id} saved = {this.state.p1_saved} setId = {this.state.set.id} score = {this.state.player1_score} identifier = "player1" update = {this.handleP1ScoreUpdate}/>
+              <SetScore key = {"p1_"+this.state.set.id} setId = {this.state.set.id} score = {this.state.set.player1_score} />
             </div>
             <div className="col-6">
-              <SetScore key = {"p2_"+this.state.set.id} saved = {this.state.p2_saved} setId = {this.state.set.id} score = {this.state.player2_score} identifier = "player2" update = {this.handleP2ScoreUpdate}/>
+              <SetScore key = {"p2_"+this.state.set.id} setId = {this.state.set.id} score = {this.state.set.player2_score} />
             </div>
           </div>
+          <center>
+            <button className="btn btn-primary">Submit Set</button>
+          </center>
         </div>
       )
     }
     else{
-      if(this.state.player1_score > this.state.player2_score){
-        return (
-          <div>
-            <div className="row">
-              <div className="col-6">
-                <strong>
-                  <center>{this.state.player1_score}</center>
-                </strong>
-              </div>
-              <div className="col-6">
-                <center>{this.state.player2_score}</center>
-              </div>
+      return (
+        <div>
+          <div className="row">
+            <div className="col-6">
+              <center>{this.state.set.player1_score}</center>
             </div>
-            <center>
-              <button className="btn btn-warning" onClick={this.handleEditSetScore}>Edit Set</button>
-            </center>
-          </div>
-        )
-      }
-      else if(this.state.player2_score > this.state.player1_score){
-        return (
-          <div>
-            <div className="row">
-              <div className="col-6">
-                <center>{this.state.player1_score}</center>
-              </div>
-              <div className="col-6">
-                <strong>
-                  <center>{this.state.player2_score}</center>
-                </strong>
-              </div>
+            <div className="col-6">
+              <center>{this.state.set.player2_score}</center>
             </div>
-            <center>
-              <button className="btn btn-warning" onClick={this.handleEditSetScore}>Edit Set</button>
-            </center>
           </div>
-        )
-      }
-      else{
-        return (
-          <div>
-            <div className="row">
-              <div className="col-6">
-                <center>{this.state.player1_score}</center>
-              </div>
-              <div className="col-6">
-                <center>{this.state.player2_score}</center>
-              </div>
-            </div>
-            <center>
-              <button className="btn btn-warning" onClick={this.handleEditSetScore}>Edit Set</button>
-            </center>
-          </div>
-        )
-      }
+          <center>
+            <button className="btn btn-warning">Edit Set</button>
+          </center>
+        </div>
+      )
     }
   },
 
@@ -193,7 +70,7 @@ var SetScore = React.createClass({
     return{
       setId: this.props.setId,
       score: this.props.score,
-      saved: this.props.saved
+      saved: (this.props.score != 0)
     };
   },
 
@@ -205,14 +82,20 @@ var SetScore = React.createClass({
 
 
   handleEditMode(){
-    var x = !this.state.saved;
-    this.setState({
-      saved: x
-    });
+    if(this.state.score != 0 && this.state.saved == false){
+      var x = !this.state.saved;
+      this.setState({
+        saved: x
+      });
+    }
   },
 
   submitPlayerScore(){
-    this.props.update(this.state.score);
+    var that = this;
+/*    $.ajax({
+
+    });
+*/
     this.setState({
       saved: true
     });
@@ -223,7 +106,7 @@ var SetScore = React.createClass({
       return(
         <div className="form-group">
           <input type="text" className="form-control input-sm" value={this.state.score} onChange={this.handleScoreChange}/>
-          <button className="btn btn-info" onClick={this.submitPlayerScore}>Submit Score</button>
+          <button className="btn btn-info">Submit Score</button>
         </div>
       );
     }
@@ -245,4 +128,6 @@ var SetScore = React.createClass({
       </div>
     );
   }
+
+
 });

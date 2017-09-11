@@ -40,11 +40,10 @@ class MatchsetsController < ApplicationController
   # PATCH/PUT /matchsets/1
   # PATCH/PUT /matchsets/1.json
   def update
-    puts matchset_params
     respond_to do |format|
       if @matchset.update(matchset_params)
         format.html { redirect_to @matchset, notice: 'Matchset was successfully updated.' }
-        format.json { render json: @matchset.to_json }
+        format.json { render :show, status: :ok, location: @matchset }
       else
         format.html { render :edit }
         format.json { render json: @matchset.errors, status: :unprocessable_entity }
