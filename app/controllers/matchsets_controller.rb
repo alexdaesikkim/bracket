@@ -42,6 +42,13 @@ class MatchsetsController < ApplicationController
   def update
     respond_to do |format|
       if @matchset.update(matchset_params)
+        if(@matchset.player1_score != 0 && @matchset.player2_score != 0)
+          @matchset.saved = true
+          # @matchset.update_score
+          @matchset.match.update_score
+          # is this breaking MVC or merely just reusing a code that can be used elsewhere?
+          @matchset.save
+        end
         format.html { redirect_to @matchset, notice: 'Matchset was successfully updated.' }
         format.json { render :show, status: :ok, location: @matchset }
       else

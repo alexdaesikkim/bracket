@@ -15,16 +15,20 @@ var Stage_Qualifier = React.createClass({
     };
   },
 
-  handlePlayerQualified(player){
+  handlePlayerQualified(player, playerqualifiers){
     var qualified_players = this.state.qualified;
 
     var index = qualified_players.length
     for(var i = 0; i < qualified_players.length; i++){
-      if(player.seed <= qualified_players[i].seed){
+      if(player.qualifier_score <= qualified_players[i].qualifier_score){
         index = i;
         i = qualified_players.length;
       }
     }
+
+    player.playerqualifiers = qualifiers;
+
+    player.seed = index;
 
     qualified_players.splice(index, 0, player);
 

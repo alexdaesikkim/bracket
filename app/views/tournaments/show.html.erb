@@ -16,7 +16,7 @@
   <br>
 <% else %>
   <h2>Current Stage: Pre-Qualifiers</h2>
-  <%= react_component("PreQualifiers", {qualifiers: @qualifiers}, {prerender: true}) %>
+  <%= react_component("PreQualifiers", {qualifiers: @qualifiers, tournament_id: @tournament.id}, {prerender: true}) %>
   <%= link_to 'Start Qualifiers', tournament_qualifier_start_path(@tournament), :class => "btn btn-primary" %>
   <br>
 <% end %>

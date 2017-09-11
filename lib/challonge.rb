@@ -34,7 +34,7 @@ class Challonge
   end
 
   #add players into the tournament
-  def add_participant(name, email, seed, tournament_id)
+  def add_participant(name, seed, tournament_id)
     puts "Adding player"
     response = RestClient::Request.execute({
       method: :post,
@@ -43,7 +43,6 @@ class Challonge
         api_key: API_KEY,
         participant: {
           :name => name,
-          :email => email,
           :seed => seed
         }
       }

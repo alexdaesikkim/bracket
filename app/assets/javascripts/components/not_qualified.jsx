@@ -8,21 +8,46 @@ var Not_Qualified = React.createClass({
     };
   },
 
+  addQualifierScores(name, score){
+    playerqualifiers = this.state.player_qualifiers;
+
+    this.setState({
+      player_qualifiers: playerqualifiers
+    }, function(){
+      this.checkQualifierFinished();
+    });
+  },
+
   checkQualifierFinished(){
-    var check = this.props.playerqualifiers.reduce( function(pq1, pq2){
+
+    //bug: i think this doesn't work for array of size one
+    //before checking, have to update the list for player_qualifiers with appropriate scores
+    var check = this.state.player_qualifiers.reduce( function(pq1, pq2){
       return (pq1.submitted && pq2.submitted);
-    })
+    });
     if(check){
-      this.props.playerQualified(this.state.player);
+      console.log("hi");
+      var score = this.state.player_qualifiers.reduce( function(total, pq){
+        console.log(pq.score);
+        return (total + parseInt(pq.score));
+      }, 0);
+      //self question: why am i updating the score here? shouldn't I get this data from ajax call?
+      player = this.state.player;
+      player.qualifier_score = score;
+      this.setState({
+        player: player
+      }, function() {
+        this.props.playerQualified(this.state.player, this.state.player_qualifiers);
+      });
     }
   },
 
   render: function() {
 
-    var checkQualifier = this.checkQualifierFinished;
+    var addScore = this.addQualifierScores;
     var qualifierform = this.state.player_qualifiers.map( function(playerqualifier) {
       return (
-        <Qualifier_Forms playerqualifier={playerqualifier} qualifier={playerqualifier.qualifier} key={"qualifier_song_"+playerqualifier.id} check={checkQualifier} qualified={false}/>
+        <Qualifier_Forms playerqualifier={playerqualifier} qualifier={playerqualifier.qualifier} key={"qualifier_song_"+playerqualifier.id} check={addScore} qualified={false}/>
       );
     });
 

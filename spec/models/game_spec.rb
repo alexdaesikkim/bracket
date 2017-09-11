@@ -1,5 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Game, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it "shows full name" do
+    game = Game.create!(name: "Beatmania IIDX", version: "Copula")
+
+    expect(game.full_name).to eq("Beatmania IIDX Copula")
+  end
 end

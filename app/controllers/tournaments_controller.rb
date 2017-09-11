@@ -17,7 +17,7 @@ class TournamentsController < ApplicationController
     @not_qualified = @all_players.where(qualifier_score: nil).includes(playerqualifiers: :qualifier)
     @qualified = @all_players.where("qualifier_score IS NOT NULL", :order => "seed ASC").includes(playerqualifiers: :qualifier)
     @not_qualified_json = @not_qualified.as_json(:include => {:playerqualifiers => {include: :qualifier}})
-    @qualified_json = @qualified.as_json(:include => {:playerqualifiers => {include: :qualifier}})
+    @qualified_json = @qualified.order("seed ASC").as_json(:include => {:playerqualifiers => {include: :qualifier}})
     @qualifiers = Qualifier.where("tournament_id = ?", @tournament.id)
     @tiebreaker_scores = @qualified.select(:qualifier_score).group(:qualifier_score).having("count(*) > 1")
     @tiebreaker = @qualified.select(:qualifier_score).group_by(&:qualifier_score).sort_by{|key, values| key}.to_json
@@ -86,14 +86,15 @@ class TournamentsController < ApplicationController
   end
 
   def start
+
+    #todo: most of this code should be backend
+    #todo: how to test API calls?
     @tournament = Tournament.find(params[:id])
     api = Challonge.new()
-    @tournament.main_stage = true
-    @tournament.save
 
-    @players = Player.where("tournament_id = ?", @tournament.id)
-    @players.map do |p|
-      raw_response = api.add_participant(p.name, p.email, p.seed, @tournament.challonge_tournament_id)
+    @players = Player.where("tournament_id = ?", @tournament.id).order("seed ASC")
+    @players.each do |p|
+      raw_response = api.add_participant(p.name, p.seed, @tournament.challonge_tournament_id)
       response = JSON.parse(raw_response)
       p.challonge_player_id = response["participant"]["id"]
       p.save
@@ -135,6 +136,9 @@ class TournamentsController < ApplicationController
       @matchset1.save
       @matchset2.save
     end
+
+    @tournament.main_stage = true
+    @tournament.save
 
     respond_to do |format|
       format.html {redirect_to @tournament}
