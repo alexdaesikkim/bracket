@@ -40,7 +40,7 @@ class MatchsetsController < ApplicationController
   # PATCH/PUT /matchsets/1
   # PATCH/PUT /matchsets/1.json
   def update
-    if(params[:player] == 1)
+    if(params[:player] == "1")
       @matchset.player1_score = params[:score]
     else
       @matchset.player2_score = params[:score]

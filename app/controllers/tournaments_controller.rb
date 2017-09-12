@@ -129,12 +129,6 @@ class TournamentsController < ApplicationController
       @playermatch2.match_id = @match.id
       @playermatch1.save
       @playermatch2.save
-      @matchset1 = Matchset.new()
-      @matchset1.match_id = @match.id
-      @matchset2 = Matchset.new()
-      @matchset2.match_id = @match.id
-      @matchset1.save
-      @matchset2.save
     end
 
     @tournament.main_stage = true

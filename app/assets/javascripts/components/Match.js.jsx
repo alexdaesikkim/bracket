@@ -125,7 +125,8 @@ var MatchPlayer = React.createClass({
             player1_score: 0,
             player2_score: 0,
             picked_player_id: that.props.player.id,
-            match_id: that.props.match_id
+            match_id: that.props.match_id,
+            saved: false
           },
           player: that.props.player
         });

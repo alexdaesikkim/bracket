@@ -17,10 +17,10 @@ var Sets = React.createClass({
         <div>
           <div className="row">
             <div className="col-6">
-              <SetScore key = {"p1_"+this.state.set.id} setId = {this.state.set.id} playerId = {"1"} score = {this.state.set.player1_score} updateScore = {this.props.updateScore} />
+              <SetScore key = {"p1_"+this.state.set.id} setId = {this.state.set.id} playerId = {1} score = {this.state.set.player1_score} updateScore = {this.props.updateScore} />
             </div>
             <div className="col-6">
-              <SetScore key = {"p2_"+this.state.set.id} setId = {this.state.set.id} playerId = {"2"} score = {this.state.set.player2_score} updateScore = {this.props.updateScore} />
+              <SetScore key = {"p2_"+this.state.set.id} setId = {this.state.set.id} playerId = {2} score = {this.state.set.player2_score} updateScore = {this.props.updateScore} />
             </div>
           </div>
         </div>
@@ -92,6 +92,7 @@ var SetScore = React.createClass({
 
   submitPlayerScore(){
     var that = this;
+
     $.ajax({
       method: 'PUT',
       data: {
@@ -119,7 +120,7 @@ var SetScore = React.createClass({
       return(
         <div className="form-group">
           <input type="text" className="form-control input-sm" value={this.state.score} onChange={this.handleScoreChange}/>
-          <button className="btn btn-info" onClick={this.submitPlayerScore()}>Submit Score</button>
+          <button className="btn btn-info" onClick={this.submitPlayerScore}>Submit Score</button>
         </div>
       );
     }

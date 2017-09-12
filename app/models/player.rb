@@ -56,8 +56,6 @@ class Player < ApplicationRecord
 
     player_seed = higher_seed.count + 1
     self.update_attributes(:seed => player_seed)
-
-    #below code has a bug: it shouldn't update when it shouldn't, via edit
     lower_seed.update_all("seed = seed + 1")
     return player_seed
   end
