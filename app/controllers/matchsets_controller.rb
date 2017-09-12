@@ -40,8 +40,14 @@ class MatchsetsController < ApplicationController
   # PATCH/PUT /matchsets/1
   # PATCH/PUT /matchsets/1.json
   def update
+    if(params[:player] == 1)
+      @matchset.player1_score = params[:score]
+    else
+      @matchset.player2_score = params[:score]
+    end
+
     respond_to do |format|
-      if @matchset.update(matchset_params)
+      if @matchset.save
         if(@matchset.player1_score != 0 && @matchset.player2_score != 0)
           @matchset.saved = true
           # @matchset.update_score
@@ -50,7 +56,7 @@ class MatchsetsController < ApplicationController
           @matchset.save
         end
         format.html { redirect_to @matchset, notice: 'Matchset was successfully updated.' }
-        format.json { render :show, status: :ok, location: @matchset }
+        format.json { render json: @matchset }
       else
         format.html { render :edit }
         format.json { render json: @matchset.errors, status: :unprocessable_entity }
@@ -76,6 +82,6 @@ class MatchsetsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def matchset_params
-      params.require(:matchset).permit(:name, :difficulty, :level, :picked_player_id, :player1_score, :player2_score, :match_id)
+      params.require(:matchset).permit(:name, :difficulty, :level, :picked_player_id, :player1_score, :player2_score, :match_id, :player, :score)
     end
 end

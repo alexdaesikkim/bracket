@@ -99,6 +99,7 @@ var Qualifier_Forms = React.createClass({
     playerqualifier.score = this.state.score;
     playerqualifier.submitted = true;
     $.ajax({
+      //wrong ajax call here iirc
       method: 'POST',
       data: {
         player_id: playerqualifier.player_id,

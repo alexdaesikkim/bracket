@@ -8,21 +8,21 @@ var Sets = React.createClass({
     };
   },
 
+
+
+  //this.props.updateScore
   setForm(){
     if(!this.state.saved){
       return (
         <div>
           <div className="row">
             <div className="col-6">
-              <SetScore key = {"p1_"+this.state.set.id} setId = {this.state.set.id} score = {this.state.set.player1_score} />
+              <SetScore key = {"p1_"+this.state.set.id} setId = {this.state.set.id} playerId = {"1"} score = {this.state.set.player1_score} updateScore = {this.props.updateScore} />
             </div>
             <div className="col-6">
-              <SetScore key = {"p2_"+this.state.set.id} setId = {this.state.set.id} score = {this.state.set.player2_score} />
+              <SetScore key = {"p2_"+this.state.set.id} setId = {this.state.set.id} playerId = {"2"} score = {this.state.set.player2_score} updateScore = {this.props.updateScore} />
             </div>
           </div>
-          <center>
-            <button className="btn btn-primary">Submit Set</button>
-          </center>
         </div>
       )
     }
@@ -92,12 +92,25 @@ var SetScore = React.createClass({
 
   submitPlayerScore(){
     var that = this;
-/*    $.ajax({
-
-    });
-*/
-    this.setState({
-      saved: true
+    $.ajax({
+      method: 'PUT',
+      data: {
+        player: this.props.playerId,
+        score: this.state.score
+      },
+      url: '/matchsets/' + this.props.setId + '.json',
+      success: function(data){
+        //if data.saved returns true then update score
+        if(data.saved){
+          that.props.updateScore(data.player1_score, data.player2_score);
+        }
+        that.setState({
+          saved: true
+        });
+      },
+      error: function(error){
+        that.setState({errors: data.responseJSON.errors})
+      }
     });
   },
 
@@ -106,7 +119,7 @@ var SetScore = React.createClass({
       return(
         <div className="form-group">
           <input type="text" className="form-control input-sm" value={this.state.score} onChange={this.handleScoreChange}/>
-          <button className="btn btn-info">Submit Score</button>
+          <button className="btn btn-info" onClick={this.submitPlayerScore()}>Submit Score</button>
         </div>
       );
     }

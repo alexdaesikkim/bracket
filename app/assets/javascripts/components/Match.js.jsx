@@ -18,14 +18,7 @@ var Match = React.createClass({
     })
   },
 
-  handleScoreUpdate(){
-    var p1_score = this.state.matchsets.filter( function(set){
-      return(set.player1_score > set.player2_score);
-    }).count;
-    var p2_score = this.state.matchsets.filter( function(set){
-      return(set.player2_score > set.player1_score);
-    }).count;
-
+  handleScoreUpdate(p1_score, p2_score){
     this.setState({
       player1_score: p1_score,
       player2_score: p2_score
@@ -34,10 +27,10 @@ var Match = React.createClass({
 
   render: function() {
     var addSet = this.handleAddSet;
-
+    var updateSet = this.handleScoreUpdate;
     var matchSets = this.state.matchsets.map( function(set) {
       return (
-        <Sets set={set} key={"set_"+set.id} />
+        <Sets set={set} key={"set_"+set.id} updateScore={updateSet} />
       );
     });
 
