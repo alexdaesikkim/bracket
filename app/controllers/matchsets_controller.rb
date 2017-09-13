@@ -48,15 +48,25 @@ class MatchsetsController < ApplicationController
 
     respond_to do |format|
       if @matchset.save
-        if(!@matchset.player1_score.nil? && !@matchset.player2_score.nil?)
+        if(@matchset.player1_score != 0 && !@matchset.player2_score != 0)
           @matchset.saved = true
           # @matchset.update_score
           @matchset.match.update_score
           # is this breaking MVC or merely just reusing a code that can be used elsewhere?
           @matchset.save
         end
+        @match = @matchset.match
+        player1_score = @match.player1_score
+        player2_score = @match.player2_score
         format.html { redirect_to @matchset, notice: 'Matchset was successfully updated.' }
-        format.json { render json: @matchset.match }
+        format.json { render :json => {
+                                        :saved => @matchset.saved,
+                                        :p1_score => @matchset.player1_score,
+                                        :p2_score => @matchset.player2_score,
+                                        :player1_score => player1_score,
+                                        :player2_score => player2_score
+                                      }
+                    }
       else
         format.html { render :edit }
         format.json { render json: @matchset.errors, status: :unprocessable_entity }

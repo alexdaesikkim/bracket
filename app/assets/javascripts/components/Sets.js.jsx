@@ -8,8 +8,10 @@ var Sets = React.createClass({
     };
   },
 
-  handleScoreSubmitted(score1, score2){
+  handleScoreSubmitted(p1_score, p2_score, score1, score2){
     this.setState({
+      player1_score: p1_score,
+      player2_score: p2_score,
       saved: true
     });
     this.props.updateScore(score1, score2);
@@ -28,10 +30,10 @@ var Sets = React.createClass({
         <div>
           <div className="row">
             <div className="col-6">
-              <SetScore key = {"p1_"+this.state.set.id} setId = {this.state.set.id} playerId = {1} score = {this.state.set.player1_score} updateScore = {this.handleScoreSubmitted} />
+              <SetScore key = {"p1_"+this.state.set.id} setId = {this.state.set.id} playerId = {1} score = {this.state.player1_score} updateScore = {this.handleScoreSubmitted} />
             </div>
             <div className="col-6">
-              <SetScore key = {"p2_"+this.state.set.id} setId = {this.state.set.id} playerId = {2} score = {this.state.set.player2_score} updateScore = {this.handleScoreSubmitted} />
+              <SetScore key = {"p2_"+this.state.set.id} setId = {this.state.set.id} playerId = {2} score = {this.state.player2_score} updateScore = {this.handleScoreSubmitted} />
             </div>
           </div>
         </div>
@@ -42,10 +44,10 @@ var Sets = React.createClass({
         <div>
           <div className="row">
             <div className="col-6">
-              <center>{this.state.set.player1_score}</center>
+              <center>{this.state.player1_score}</center>
             </div>
             <div className="col-6">
-              <center>{this.state.set.player2_score}</center>
+              <center>{this.state.player2_score}</center>
             </div>
           </div>
           <center>
@@ -110,14 +112,20 @@ var SetScore = React.createClass({
       },
       url: '/matchsets/' + this.props.setId + '.json',
       success: function(data){
+        console.log(data.saved)
         //if data.saved returns true then update score
         if(data.saved){
-          console.log("saved!")
-          that.props.updateScore(data.player1_score, data.player2_score);
+          that.setState({
+            saved: true
+          }, function(){
+            that.props.updateScore(data.p1_score, data.p2_score, data.player1_score, data.player2_score);
+          });
         }
-        that.setState({
-          saved: true
-        });
+        else{
+          that.setState({
+            saved: true
+          });
+        }
       },
       error: function(error){
         that.setState({errors: data.responseJSON.errors})

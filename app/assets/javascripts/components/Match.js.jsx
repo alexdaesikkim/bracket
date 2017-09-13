@@ -6,7 +6,8 @@ var Match = React.createClass({
       player1: this.props.player1,
       player2: this.props.player2,
       player1_score: this.props.match.player1_score,
-      player2_score: this.props.match.player2_score
+      player2_score: this.props.match.player2_score,
+      submit: false,
     };
   },
 
@@ -19,9 +20,34 @@ var Match = React.createClass({
   },
 
   handleScoreUpdate(p1_score, p2_score){
+    console.log(p1_score);
+    console.log(p2_score);
     this.setState({
       player1_score: p1_score,
       player2_score: p2_score
+    });
+  },
+
+  submitMatch(){
+    $.ajax({
+      method: 'PUT',
+      data: {
+        //relevant data
+      },
+      url: '/match/' + this.state.match_id + '.json',
+      success: function(data){
+        //things to do:
+        //within controller/model:
+        //1. update everything
+        //2. send state to Challonge
+        //3. grab updated state from Challonge
+        //4. update backend
+        //5. display new games that can be played
+        //6. redirect to tournaments page with alert for updated score
+      },
+      error: function(error){
+        that.setState({errors: data.responseJSON.errors})
+      }
     });
   },
 
@@ -35,6 +61,7 @@ var Match = React.createClass({
     });
 
     return (
+
       <div>
         <br/>
         <div>
@@ -59,6 +86,11 @@ var Match = React.createClass({
           </div>
           <div>
             {matchSets}
+          </div>
+          <div>
+            <center>
+              <button type="button" className="btn btn-primary" onClick={this.submitMatch}>Finalize Match (Submit to Challonge)</button>
+            </center>
           </div>
         </div>
       </div>
