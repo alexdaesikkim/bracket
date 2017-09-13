@@ -8,7 +8,18 @@ var Sets = React.createClass({
     };
   },
 
+  handleScoreSubmitted(score1, score2){
+    this.setState({
+      saved: true
+    });
+    this.props.updateScore(score1, score2);
+  },
 
+  handleEditScore(){
+    this.setState({
+      saved: false
+    });
+  },
 
   //this.props.updateScore
   setForm(){
@@ -17,10 +28,10 @@ var Sets = React.createClass({
         <div>
           <div className="row">
             <div className="col-6">
-              <SetScore key = {"p1_"+this.state.set.id} setId = {this.state.set.id} playerId = {1} score = {this.state.set.player1_score} updateScore = {this.props.updateScore} />
+              <SetScore key = {"p1_"+this.state.set.id} setId = {this.state.set.id} playerId = {1} score = {this.state.set.player1_score} updateScore = {this.handleScoreSubmitted} />
             </div>
             <div className="col-6">
-              <SetScore key = {"p2_"+this.state.set.id} setId = {this.state.set.id} playerId = {2} score = {this.state.set.player2_score} updateScore = {this.props.updateScore} />
+              <SetScore key = {"p2_"+this.state.set.id} setId = {this.state.set.id} playerId = {2} score = {this.state.set.player2_score} updateScore = {this.handleScoreSubmitted} />
             </div>
           </div>
         </div>
@@ -38,7 +49,7 @@ var Sets = React.createClass({
             </div>
           </div>
           <center>
-            <button className="btn btn-warning">Edit Set</button>
+            <button className="btn btn-warning" onClick={this.handleEditScore}>Edit Set</button>
           </center>
         </div>
       )
@@ -82,12 +93,10 @@ var SetScore = React.createClass({
 
 
   handleEditMode(){
-    if(this.state.score != 0 && this.state.saved == false){
-      var x = !this.state.saved;
-      this.setState({
-        saved: x
-      });
-    }
+    var x = !this.state.saved;
+    this.setState({
+      saved: x
+    });
   },
 
   submitPlayerScore(){
@@ -103,6 +112,7 @@ var SetScore = React.createClass({
       success: function(data){
         //if data.saved returns true then update score
         if(data.saved){
+          console.log("saved!")
           that.props.updateScore(data.player1_score, data.player2_score);
         }
         that.setState({

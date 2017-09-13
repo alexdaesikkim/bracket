@@ -48,7 +48,7 @@ class MatchsetsController < ApplicationController
 
     respond_to do |format|
       if @matchset.save
-        if(@matchset.player1_score != 0 && @matchset.player2_score != 0)
+        if(!@matchset.player1_score.nil? && !@matchset.player2_score.nil?)
           @matchset.saved = true
           # @matchset.update_score
           @matchset.match.update_score
@@ -56,7 +56,7 @@ class MatchsetsController < ApplicationController
           @matchset.save
         end
         format.html { redirect_to @matchset, notice: 'Matchset was successfully updated.' }
-        format.json { render json: @matchset }
+        format.json { render json: @matchset.match }
       else
         format.html { render :edit }
         format.json { render json: @matchset.errors, status: :unprocessable_entity }
