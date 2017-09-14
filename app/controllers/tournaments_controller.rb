@@ -104,32 +104,7 @@ class TournamentsController < ApplicationController
     response = JSON.parse(raw_response)
 
     #get available matches and create them
-    raw_response = api.get_next_match(@tournament.challonge_tournament_id)
-    response = JSON.parse(raw_response)
-
-    puts response
-    puts response
-
-    response.each do |r|
-      @match = Match.new()
-      @playermatch1 = Playermatch.new()
-      @playermatch2 = Playermatch.new()
-      @player1 = Player.where("challonge_player_id = ?", r["match"]["player1_id"]).first
-      @player2 = Player.where("challonge_player_id = ?", r["match"]["player2_id"]).first
-      @match.player1_id = @player1.id
-      @match.player2_id = @player2.id
-      @playermatch1.player_id = @player1.id
-      @playermatch2.player_id = @player2.id
-      @match.challonge_match_id = r["match"]["id"]
-      @match.tournament_id = @tournament.id
-      @match.player1_score = 0
-      @match.player2_score = 0
-      @match.save
-      @playermatch1.match_id = @match.id
-      @playermatch2.match_id = @match.id
-      @playermatch1.save
-      @playermatch2.save
-    end
+    @tournament.grab_match
 
     @tournament.main_stage = true
     @tournament.save
