@@ -28,7 +28,6 @@ class MatchesController < ApplicationController
   # POST /matches.json
   def create
     @match = Match.new(match_params)
-
     respond_to do |format|
       if @match.save
         format.html { redirect_to @match, notice: 'Match was successfully created.' }
@@ -43,10 +42,11 @@ class MatchesController < ApplicationController
   # PATCH/PUT /matches/1
   # PATCH/PUT /matches/1.json
   def update
+    @match = Match.update(match_params)
     @match.submit
     respond_to do |format|
       format.html { redirect_to @match, notice: 'Match was successfully updated.' }
-      format.json { redirect_to @match.tournament }
+      format.json { render json: {location: tournament_path(@match.tournament)} }
     end
   end
 

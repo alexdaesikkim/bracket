@@ -29,14 +29,15 @@ var Match = React.createClass({
   },
 
   submitMatch(){
+    var winner_id = (this.state.player1_score > this.state.player2_score) ? this.state.player1.id : this.state.player2.id;
     $.ajax({
       method: 'PUT',
       data: {
-        //relevant data
+        winner_id: winner_id
       },
       url: '/matches/' + this.state.match_id + '.json',
       success: function(data){
-        //6. redirect to tournaments page with alert for updated score
+        window.location = data.location;
       },
       error: function(error){
         that.setState({errors: data.responseJSON.errors})
