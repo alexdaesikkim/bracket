@@ -34,15 +34,8 @@ var Match = React.createClass({
       data: {
         //relevant data
       },
-      url: '/match/' + this.state.match_id + '.json',
+      url: '/matches/' + this.state.match_id + '.json',
       success: function(data){
-        //things to do:
-        //within controller/model:
-        //1. update everything
-        //2. send state to Challonge
-        //3. grab updated state from Challonge
-        //4. update backend
-        //5. display new games that can be played
         //6. redirect to tournaments page with alert for updated score
       },
       error: function(error){

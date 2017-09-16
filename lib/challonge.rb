@@ -87,15 +87,15 @@ class Challonge
   end
 
   #submit a match. DO NOT ALLOW RE-DOs, need to work on that logistic
-  def match_submit(tournament_id, match_id, winner_id, player1_score, player2_score)
-    respone = RestClient::Request.execute({
+  def submit_match(tournament_id, match_id, winner_id, score)
+    response = RestClient::Request.execute({
       method: :put,
       url: match_put(tournament_id, match_id),
       payload:{
         api_key: API_KEY,
         match: {
           winner_id: winner_id,
-          scores_scv: player1_score.to_s + "-" + player2_score.to_s
+          scores_csv: score
         }
       }
     })
@@ -122,7 +122,7 @@ class Challonge
   end
 
   def match_put(tournament_id, match_id)
-    return tournament_url(tournament_id) + "/matches/" + match_id + ".json"
+    return tournament_url(tournament_id) + "/matches/" + match_id.to_s + ".json"
   end
 
   def participant_get(tournament_id)

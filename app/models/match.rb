@@ -5,6 +5,7 @@ class Match < ApplicationRecord
   has_many :playermatches
   has_many :players, through: :playermatches
   has_many :matchsets
+  belongs_to :tournament
 
   def name
     return self.players.map { |p| p.name }.join(" VS ")
@@ -26,14 +27,21 @@ class Match < ApplicationRecord
     self.update_attributes(:player1_score => p1_score, :player2_score => p2_score)
   end
 
-  def update_winner
-    winner_id = self.player1_id
+  def submit
+    winner = self.players.find(self.player1_id)
     if(self.player1_score < self.player2_score)
-      winner_id = self.player2_id
+      winner = self.players.find(self.player2_id)
     end
-    self.update_attributes(:winner_id => winner_id)
+    self.update_attributes(:winner_id => winner.id)
+
     score = self.player1_score.to_s + "-" + self.player2_score.to_s
-    puts score
+
+    api = Challonge.new()
+    raw_response = api.submit_match(self.tournament.challonge_tournament_id, self.challonge_match_id, winner.challonge_player_id, score)
+    #error check
+
+
+    self.tournament.grab_match
   end
 
 end
