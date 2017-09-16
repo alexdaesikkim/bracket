@@ -45,6 +45,14 @@ var Match = React.createClass({
     });
   },
 
+  submitButton(){
+    if(this.state.player1_score != this.state.player2_score){
+      return(
+        <button type="button" className="btn btn-primary" onClick={this.submitMatch}>Finalize Match (Submit to Challonge)</button>
+      );
+    }
+  },
+
   render: function() {
     var addSet = this.handleAddSet;
     var updateSet = this.handleScoreUpdate;
@@ -81,9 +89,10 @@ var Match = React.createClass({
           <div>
             {matchSets}
           </div>
+          <br />
           <div>
             <center>
-              <button type="button" className="btn btn-primary" onClick={this.submitMatch}>Finalize Match (Submit to Challonge)</button>
+              {this.submitMatch}
             </center>
           </div>
         </div>
