@@ -92,7 +92,7 @@ var Match = React.createClass({
           <br />
           <div>
             <center>
-              {this.submitMatch}
+              {this.submitButton()}
             </center>
           </div>
         </div>

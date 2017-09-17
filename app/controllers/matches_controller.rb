@@ -42,7 +42,8 @@ class MatchesController < ApplicationController
   # PATCH/PUT /matches/1
   # PATCH/PUT /matches/1.json
   def update
-    @match = Match.update(match_params)
+    @match.winner_id = params[:winner_id]
+    @match.save
     @match.submit
     respond_to do |format|
       format.html { redirect_to @match, notice: 'Match was successfully updated.' }
