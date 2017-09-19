@@ -4,7 +4,8 @@ var Sets = React.createClass({
       set: this.props.set,
       saved: this.props.set.saved,
       player1_score: this.props.set.player1_score,
-      player2_score: this.props.set.player2_score
+      player2_score: this.props.set.player2_score,
+      submitted: this.props.submitted
     };
   },
 
@@ -21,6 +22,14 @@ var Sets = React.createClass({
     this.setState({
       saved: false
     });
+  },
+
+  editButton(){
+    if(!this.state.submitted){
+      return(
+        <button className="btn btn-warning" onClick={this.handleEditScore}>Edit Set</button>
+      );
+    }
   },
 
   //this.props.updateScore
@@ -51,7 +60,7 @@ var Sets = React.createClass({
             </div>
           </div>
           <center>
-            <button className="btn btn-warning" onClick={this.handleEditScore}>Edit Set</button>
+            {this.editButton()}
           </center>
         </div>
       )

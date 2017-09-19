@@ -7,7 +7,7 @@ var Match = React.createClass({
       player2: this.props.player2,
       player1_score: this.props.match.player1_score,
       player2_score: this.props.match.player2_score,
-      submit: false,
+      submitted: (this.props.match.winner_id !== null)
     };
   },
 
@@ -38,6 +38,9 @@ var Match = React.createClass({
       url: '/matches/' + this.state.match_id + '.json',
       success: function(data){
         window.location = data.location;
+        that.setState({
+          submitted: true
+        });
       },
       error: function(error){
         that.setState({errors: data.responseJSON.errors})
@@ -46,7 +49,7 @@ var Match = React.createClass({
   },
 
   submitButton(){
-    if(this.state.player1_score != this.state.player2_score){
+    if((this.state.player1_score != this.state.player2_score) && !this.state.submitted){
       return(
         <button type="button" className="btn btn-primary" onClick={this.submitMatch}>Finalize Match (Submit to Challonge)</button>
       );
@@ -56,9 +59,10 @@ var Match = React.createClass({
   render: function() {
     var addSet = this.handleAddSet;
     var updateSet = this.handleScoreUpdate;
+    var that = this
     var matchSets = this.state.matchsets.map( function(set) {
       return (
-        <Sets set={set} key={"set_"+set.id} updateScore={updateSet} />
+        <Sets set={set} key={"set_"+set.id} submitted = {that.state.submitted} updateScore={updateSet} />
       );
     });
 
