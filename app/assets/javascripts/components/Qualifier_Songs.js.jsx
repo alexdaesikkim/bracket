@@ -22,11 +22,10 @@ var Qualifier_Songs = React.createClass({
   render: function() {
     return (
       <div className="card">
-        <h4 className="card-header">{"Song #"+this.state.song.number}</h4>
-        <div className="card-block">
-          <h5 className="card-title">{this.state.song.name}</h5>
+        <h4 className="card-header">{this.state.song.name}</h4>
+        <div className="card-body">
+          <h5 className="card-title">{"Level: " + this.state.song.level}</h5>
           <h5 className="card-text">{this.state.song.difficulty}</h5>
-          <h5 className="card-text">{"Level: " + this.state.song.level}</h5>
           <button className="btn btn-danger" onClick={this.handleRemoveSong}>Delete</button>
         </div>
       </div>

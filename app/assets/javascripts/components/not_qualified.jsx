@@ -19,12 +19,11 @@ var Not_Qualified = React.createClass({
   },
 
   checkQualifierFinished(){
-
     //bug: i think this doesn't work for array of size one
     //before checking, have to update the list for player_qualifiers with appropriate scores
-    var check = this.state.player_qualifiers.reduce( function(pq1, pq2){
-      return (pq1.submitted && pq2.submitted);
-    });
+    var check = this.state.player_qualifiers.reduce( function(base, pq){
+      return (base && pq.submitted);
+    }, true);
     if(check){
       console.log("hi");
       var score = this.state.player_qualifiers.reduce( function(total, pq){
@@ -62,7 +61,7 @@ var Not_Qualified = React.createClass({
           </h5>
         </div>
         <div id= {"not_qualified_collapse_"+this.state.player.id} className="collapse" role="tabpanel" aria-labelledby= {"not_qualified_heading_" + this.state.player.id} >
-          <div className="card-block">
+          <div className="card-body">
             <div className="row">
               <div className= "col-12 col-lg-6">
                 {qualifierform}

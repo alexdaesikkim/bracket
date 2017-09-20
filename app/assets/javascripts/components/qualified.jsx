@@ -6,7 +6,7 @@ var Qualified = React.createClass({
       score: this.props.player.qulifier_score
     };
   },
-
+  
   //todo: make sure updating the score updates the actual visuals on the main screen, rather than forcing users to refresh
 
   render() {
@@ -32,7 +32,7 @@ var Qualified = React.createClass({
           </h5>
         </div>
         <div id= {"qualified_collapse_"+this.state.player.id} className="collapse" role="tabpanel" aria-labelledby= {"qualified_heading_" + this.state.player.id} >
-          <div className="card-block">
+          <div className="card-body">
             {qualifierform}
           </div>
         </div>

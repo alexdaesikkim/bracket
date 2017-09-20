@@ -26,7 +26,7 @@ var Stage_Qualifier = React.createClass({
       }
     }
 
-    player.playerqualifiers = qualifiers;
+    player.playerqualifiers = playerqualifiers;
 
     player.seed = index;
 
@@ -104,7 +104,6 @@ var Stage_Qualifier = React.createClass({
     if(this.state.addPlayer == true){
       return(
         <div className="form-group">
-          {this.state.player.tournament_id}
           <div>
             Name:
             <input type="text" className="form-control input-sm" id="name" value={this.state.player.name} onChange={this.handlePlayerNameChange} />

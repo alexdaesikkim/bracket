@@ -41,7 +41,7 @@ var Tied_Player = React.createClass({
           </h5>
         </div>
         <div id= {"tied_collapse_"+this.state.player.id} className="collapse" role="tabpanel" aria-labelledby= {"tied_heading_" + this.state.player.id} >
-          <div className="card-block">
+          <div className="card-body">
             {this.state.player.qualifier_score}
             <br />
             Tiebreaker score:

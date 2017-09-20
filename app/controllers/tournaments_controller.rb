@@ -92,7 +92,7 @@ class TournamentsController < ApplicationController
     @tournament = Tournament.find(params[:id])
     api = Challonge.new()
 
-    @players = Player.where("tournament_id = ?", @tournament.id).order("seed ASC")
+    @players = Player.where("tournament_id = ? AND seed IS NOT NULL", @tournament.id).order("seed ASC")
     @players.each do |p|
       raw_response = api.add_participant(p.name, p.seed, @tournament.challonge_tournament_id)
       response = JSON.parse(raw_response)
