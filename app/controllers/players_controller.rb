@@ -41,7 +41,7 @@ class PlayersController < ApplicationController
       else
         puts @player.errors.full_messages
         format.html { render :new }
-        format.json { render json: @player.errors, status: :unprocessable_entity }
+        format.json { render json: @player.errors.full_messages, status: :unprocessable_entity }
       end
     end
   end

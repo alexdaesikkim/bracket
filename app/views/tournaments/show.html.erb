@@ -4,7 +4,7 @@
 <% if @tournament.main_stage? %>
   <h2>Current Stage: Bracket</h2>
   <br>
-  <h5>Unplayed Matches</h5>
+  <h5>Matches to be Played</h5>
   <ul class="list-group">
     <% @matches.each do |match| %>
       <li class="list-group-item"> <%= link_to "#{match.name}", match_path(match) %></li>

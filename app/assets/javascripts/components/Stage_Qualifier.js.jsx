@@ -11,16 +11,18 @@ var Stage_Qualifier = React.createClass({
         email: '',
         tournament_id: this.props.tournament_id
       },
-      addPlayer: false
+      addPlayer: false,
+      errors: []
     };
   },
 
   handlePlayerQualified(player, playerqualifiers){
     var qualified_players = this.state.qualified;
 
-    var index = qualified_players.length
+    var index = qualified_players.length;
+
     for(var i = 0; i < qualified_players.length; i++){
-      if(player.qualifier_score <= qualified_players[i].qualifier_score){
+      if(player.qualifier_score > qualified_players[i].qualifier_score){
         index = i;
         i = qualified_players.length;
       }
@@ -28,7 +30,7 @@ var Stage_Qualifier = React.createClass({
 
     player.playerqualifiers = playerqualifiers;
 
-    player.seed = index;
+    player.seed = index+1;
 
     qualified_players.splice(index, 0, player);
 
@@ -67,12 +69,11 @@ var Stage_Qualifier = React.createClass({
             phone: '',
             email: '',
             tournament_id: that.props.tournament_id
-          },
-          addPlayer: false
+          }
         });
       },
       error: function(error){
-        that.setState({errors: data.responseJSON.errors})
+        that.setState({errors: error.responseJSON})
       }
     });
   },
@@ -126,7 +127,7 @@ var Stage_Qualifier = React.createClass({
 
   render: function() {
     var qualifiers = this.state.qualifiers;
-    var callPlayerQualified = this.handlePlayerQualified
+    var callPlayerQualified = this.handlePlayerQualified;
 
     not_qualified_players = this.state.not_qualified.map( function(player) {
       return (
@@ -140,11 +141,23 @@ var Stage_Qualifier = React.createClass({
       );
     });
 
+    errors = this.state.errors.map(function(error){
+      return(
+        <div>
+          <br/>
+          <div className="alert alert-danger" role="alert">
+            {error}
+          </div>
+        </div>
+      )
+    });
+
     return (
       <div>
         <br/>
         <div>
-          <button className="btn btn-primary" onClick = {this.handleAddPlayerForm}>Toggle Player Form</button>
+          <button className="btn btn-primary" onClick = {this.handleAddPlayerForm}>Toggle Player Form (Add Player)</button>
+          {errors}
           {this.player_form()}
         </div>
         <br/>

@@ -90,6 +90,7 @@ class TournamentsController < ApplicationController
     #todo: most of this code should be backend
     #todo: how to test API calls?
     @tournament = Tournament.find(params[:id])
+
     api = Challonge.new()
 
     @players = Player.where("tournament_id = ? AND seed IS NOT NULL", @tournament.id).order("seed ASC")

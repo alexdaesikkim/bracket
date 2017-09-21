@@ -104,9 +104,29 @@ class Challonge
     return response
   end
 
+  def reset_tournament(tournament_id)
+    response = RestClient::Request.execute({
+      method: :post,
+      url: tournament_reset(tournament_id),
+      payload: {
+        api_key: API_KEY
+      }
+    })
+    rescue RestClient::ExceptionWithResponse => e
+      puts e.response
+    puts response
+    puts "Tournament Reset"
+    return response
+  end
+
+
   private
   def tournament_url(tournament_id)
     return "https://api.challonge.com/v1/tournaments/" + tournament_id.to_s
+  end
+
+  def tournament_reset(tournament_id)
+    return tournament_url(tournament_id) + "/reset.json"
   end
 
   def tournament_put(tournament_id)
