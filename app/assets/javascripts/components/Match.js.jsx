@@ -72,22 +72,12 @@ var Match = React.createClass({
         <br/>
         <div>
           <div className="row">
-            <div className="col-12">
-              <center><h3>{this.state.player1.name} VS {this.state.player2.name}</h3>
+            <div className="col col-sm-12 text-center">
+              <h2>{this.state.player1.name} VS {this.state.player2.name}</h2>
               <br/>
               <h3>{this.state.player1_score} - {this.state.player2_score}</h3>
               <br/>
-              </center>
-            </div>
-            <div className="col col-sm-12 col-md-6">
-              <center>
-                <MatchPlayer key={this.state.player1.name} match_id={this.state.match_id} player={this.state.player1} addSetToMatch={addSet} />
-              </center>
-            </div>
-            <div className="col col-sm-12 col-md-6">
-              <center>
-                <MatchPlayer key={this.state.player2.name} match_id={this.state.match_id} player={this.state.player2} addSetToMatch={addSet} />
-              </center>
+              <MatchPlayer player1={this.state.player1} player2={this.state.player2} match_id={this.state.match_id} addSetToMatch={addSet} />
             </div>
           </div>
           <div>
@@ -108,23 +98,49 @@ var Match = React.createClass({
 var MatchPlayer = React.createClass({
   getInitialState() {
     return {
-      addmatch: false,
+      addset: false,
+      player1: this.props.player1,
+      player2: this.props.player2,
       matchset: {
         name: '',
         level: '',
         difficulty: '',
         player1_score: 0,
         player2_score: 0,
-        picked_player_id: this.props.player.id,
-        match_id: this.props.match_id
+        match_id: this.props.match_id,
+        picked_player_id: 0
       },
-      player: this.props.player
+      player_name: ''
     };
   },
 
-  handleAddMatchForm(){
-    var bool = this.state.addmatch;
-    this.setState({addmatch: !bool});
+  handleAddSetForm(){
+    var bool = this.state.addset;
+    this.setState({addset: !bool});
+  },
+
+  handlePickedP1(){
+    var matchset = this.state.matchset;
+    matchset.picked_player_id = this.state.player1.id;
+    this.setState({
+      matchset: matchset,
+      player_name: this.state.player1.name
+    });
+  },
+
+  handlePickedP2(){
+    var matchset = this.state.matchset;
+    matchset.picked_player_id = this.state.player2.id;
+    this.setState({
+      matchset: matchset,
+      player_name: this.state.player2.name
+    });
+  },
+
+  handlePickedRandom(){
+    var matchset = this.state.matchset;
+    matchset.picked_player_id = 0;
+    this.setState({matchset: matchset});
   },
 
   handleSongNameChange(event){
@@ -156,18 +172,16 @@ var MatchPlayer = React.createClass({
       success: function(data){
         that.props.addSetToMatch(data);
         that.setState({
-          addmatch: false,
+          addset: false,
           matchset: {
             name: '',
             level: '',
             difficulty: '',
             player1_score: 0,
             player2_score: 0,
-            picked_player_id: that.props.player.id,
-            match_id: that.props.match_id,
-            saved: false
-          },
-          player: that.props.player
+            picked_player_id: 0,
+            match_id: that.props.match_id
+          }
         });
       },
       error: function(error){
@@ -176,37 +190,72 @@ var MatchPlayer = React.createClass({
     });
   },
 
-  addMatchPlayer(){
-    if(this.state.addmatch == true){
+  addSet(){
+    if(this.state.matchset.picked_player_id != 0){
       return(
-        <div className="form-group">
-          <div>
-            Song Name:
-            <input type="text" className="form-control input-sm" id="name" value={this.state.matchset.name} onChange={this.handleSongNameChange} />
+        <div className="row justify-content-center">
+          <div className="col-sm-12 col-md-6">
+            <div className="form-group text-justify">
+              <div className="text-center">
+                {this.state.player_name + "'"}s pick
+              </div>
+              <div>
+                Song Name:
+                <input type="text" className="form-control input-sm" id="name" value={this.state.matchset.name} onChange={this.handleSongNameChange} />
+              </div>
+              <div>
+                Song Level:
+                <input type="text" className="form-control input-sm" id="level" value={this.state.matchset.level} onChange={this.handleSongLevelChange} />
+              </div>
+              <div>
+                Song Difficulty:
+                <input type="text" className="form-control input-sm" id="difficulty" value={this.state.matchset.difficulty} onChange={this.handleSongDifficultyChange} />
+              </div>
+              <br/>
+              <button className="btn btn-primary" onClick={this.handleAddSet}>Add Set</button>
+            </div>
           </div>
-          <div>
-            Song Level:
-            <input type="text" className="form-control input-sm" id="level" value={this.state.matchset.level} onChange={this.handleSongLevelChange} />
-          </div>
-          <div>
-            Song Difficulty:
-            <input type="text" className="form-control input-sm" id="difficulty" value={this.state.matchset.difficulty} onChange={this.handleSongDifficultyChange} />
-          </div>
-          <br/>
-          <button className="btn btn-primary" onClick={this.handleAddSet}>Add Set</button>
         </div>
       );
     }
-    else return null;
+    else return(
+      <div>
+        <button className="btn btn-primary">Add Random Song (Not supported yet)</button>
+      </div>
+    );
+  },
+
+  optionButtonGroup(){
+    return(
+      <div className= "center">
+        <div className="btn-group" role="group" aria-label="Player ID">
+          <button type="button" className="btn btn-primary" onClick={this.handlePickedP1}>{this.state.player1.name}</button>
+          <button type="button" className="btn btn-warning" onClick={this.handlePickedRandom}>Random</button>
+          <button type="button" className="btn btn-primary" onClick={this.handlePickedP2}>{this.state.player2.name}</button>
+        </div>
+      </div>
+    );
+  },
+
+  setForm(){
+    if(this.state.addset){
+      return(
+        <div>
+          {this.optionButtonGroup()}
+          <br/>
+          {this.addSet()}
+        </div>
+      );
+    }
   },
 
   render: function() {
     return (
       <div>
-        <strong>{this.state.player.name}</strong>
+        <button type="button" className="btn btn-primary" onClick={this.handleAddSetForm}>Add New Set</button>
         <br/>
-        <button className="btn btn-primary" onClick = {this.handleAddMatchForm}>Add New Set {this.state.player.name}</button>
-        {this.addMatchPlayer()}
+        <br/>
+        {this.setForm()}
       </div>
     );
   }
