@@ -5,14 +5,20 @@ var Sets = React.createClass({
       saved: this.props.set.saved,
       player1_score: this.props.set.player1_score,
       player2_score: this.props.set.player2_score,
-      submitted: this.props.submitted
+      submitted: this.props.submitted,
+      player1_check: ((this.props.set.player1_score > this.props.set.player2_score) && this.props.set.saved ? '✓' : ''),
+      player2_check: ((this.props.set.player1_score < this.props.set.player2_score) && this.props.set.saved ? '✓' : '')
     };
   },
 
   handleScoreSubmitted(p1_score, p2_score, score1, score2){
+    var p1_check = ((p1_score > p2_score) ? '✓' : '');
+    var p2_check = ((p2_score > p1_score) ? '✓' : '');
     this.setState({
       player1_score: p1_score,
       player2_score: p2_score,
+      player1_check: p1_check,
+      player2_check: p2_check,
       saved: true
     });
     this.props.updateScore(score1, score2);
@@ -69,20 +75,39 @@ var Sets = React.createClass({
 
   render: function() {
     return (
-      <div>
-        <br/>
-        <div className="row">
-          <div className="col-12">
-            <center>
-              <h3>{this.props.set.name}</h3>
-              <br/>
-              <h5>{this.props.set.difficulty} {this.props.set.level}</h5>
-            </center>
-            <br/>
+    <div>
+      <div className="card">
+        <div className="card-header" role="tab" id= {"set_heading_"+this.state.set.id} >
+          <div className="row">
+            <div className="col-1 text-center">
+              <h5>
+                {this.state.player1_check}
+              </h5>
+            </div>
+            <div className="col-10 text-center">
+              <h5>
+                <a data-toggle="collapse" data-parent="#accordion" href= {"#set_collapse_"+this.state.set.id} aria-expanded="true" aria-controls= {"set_collapse_"+this.state.set.id}>
+                  {this.props.set.name}
+                </a>
+              </h5>
+            </div>
+            <div className="col-1 text-center">
+              <h5>
+                {this.state.player2_check}
+              </h5>
+            </div>
           </div>
         </div>
-        {this.setForm()}
+        <div id= {"set_collapse_"+this.state.set.id} className="collapse" role="tabpanel" aria-labelledby= {"set_heading_"+this.state.set.id} >
+          <div className="card-body">
+            <div className="text-center">
+              {this.props.set.difficulty} {this.props.set.level}
+            </div>
+            {this.setForm()}
+          </div>
+        </div>
       </div>
+    </div>
     );
   }
 });
@@ -146,7 +171,7 @@ var SetScore = React.createClass({
     if(!this.state.saved){
       return(
         <div className="form-group">
-          <input type="text" className="form-control input-sm" value={this.state.score} onChange={this.handleScoreChange}/>
+          <input type="number" className="form-control input-sm" value={this.state.score} onChange={this.handleScoreChange}/>
           <button className="btn btn-info" onClick={this.submitPlayerScore}>Submit Score</button>
         </div>
       );
