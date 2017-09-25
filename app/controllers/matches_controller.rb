@@ -12,6 +12,11 @@ class MatchesController < ApplicationController
   def show
     @player1 = Player.find(@match.player1_id)
     @player2 = Player.find(@match.player2_id)
+
+    #currently only supports one to one with player and tournament, so may have to change this code
+    #when things scale up. Probably have to edit playerqualifier to add tournament_id for double checking
+    @player1_picks = Playerqualifier.where("picked_player_id = ?", @player1.id)
+    @player2_picks = Playerqualifier.where("picked_player_id = ?", @player2.id)
     @matchsets = @match.matchsets.order("created_at ASC")
   end
 

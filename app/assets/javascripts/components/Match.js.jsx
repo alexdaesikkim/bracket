@@ -77,7 +77,7 @@ var Match = React.createClass({
               <br/>
               <h3>{this.state.player1_score} - {this.state.player2_score}</h3>
               <br/>
-              <MatchPlayer player1={this.state.player1} player2={this.state.player2} match_id={this.state.match_id} addSetToMatch={addSet} />
+              <AddMatchSet player1={this.state.player1} player2={this.state.player2} match_id={this.state.match_id} addSetToMatch={addSet} />
             </div>
           </div>
           <div>
@@ -95,7 +95,7 @@ var Match = React.createClass({
   }
 });
 
-var MatchPlayer = React.createClass({
+var AddMatchSet = React.createClass({
   getInitialState() {
     return {
       addset: false,
@@ -110,7 +110,8 @@ var MatchPlayer = React.createClass({
         match_id: this.props.match_id,
         picked_player_id: 0
       },
-      player_name: ''
+      player_name: '',
+      player_picks: ''
     };
   },
 
@@ -193,12 +194,9 @@ var MatchPlayer = React.createClass({
   addSet(){
     if(this.state.matchset.picked_player_id != 0){
       return(
-        <div className="row justify-content-center">
+        <div className="row">
           <div className="col-sm-12 col-md-6">
             <div className="form-group text-justify">
-              <div className="text-center">
-                {this.state.player_name + "'"}s pick
-              </div>
               <div>
                 Song Name:
                 <input type="text" className="form-control input-sm" id="name" value={this.state.matchset.name} onChange={this.handleSongNameChange} />
@@ -212,16 +210,27 @@ var MatchPlayer = React.createClass({
                 <input type="text" className="form-control input-sm" id="difficulty" value={this.state.matchset.difficulty} onChange={this.handleSongDifficultyChange} />
               </div>
               <br/>
+            </div>
+          </div>
+          <div className="col-sm-12 col-md-6 text-justify">
+            {this.state.player_name + "'"}s picks:
+          </div>
+          <div className="col-12">
+            <div className="text-center">
               <button className="btn btn-primary" onClick={this.handleAddSet}>Add Set</button>
             </div>
           </div>
+          <br/>
+          <br/>
         </div>
       );
     }
     else return(
       <div>
         <button className="btn btn-primary">Add Random Song (Not supported yet)</button>
-      </div>
+        <br/>
+        <br/>
+    </div>
     );
   },
 
