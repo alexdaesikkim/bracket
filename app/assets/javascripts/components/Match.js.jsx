@@ -7,11 +7,14 @@ var Match = React.createClass({
       player2: this.props.player2,
       player1_score: this.props.match.player1_score,
       player2_score: this.props.match.player2_score,
+      p1_picks: this.props.player1_picks,
+      p2_picks: this.props.player2_picks,
       submitted: (this.props.match.winner_id !== null)
     };
   },
 
   handleAddSet(set){
+    //TODO: add to picks
     var newSets = this.state.matchsets;
     newSets.push(set);
     this.setState({
@@ -77,7 +80,7 @@ var Match = React.createClass({
               <br/>
               <h3>{this.state.player1_score} - {this.state.player2_score}</h3>
               <br/>
-              <AddMatchSet player1={this.state.player1} player2={this.state.player2} match_id={this.state.match_id} addSetToMatch={addSet} />
+              <AddMatchSet player1={this.state.player1} player2={this.state.player2} p1_picks={this.state.p1_picks} p2_picks={this.state.p2_picks} match_id={this.state.match_id} addSetToMatch={addSet} />
             </div>
           </div>
           <div>
@@ -101,6 +104,8 @@ var AddMatchSet = React.createClass({
       addset: false,
       player1: this.props.player1,
       player2: this.props.player2,
+      p1_picks: this.props.p1_picks,
+      p2_picks: this.props.p2_picks,
       matchset: {
         name: '',
         level: '',

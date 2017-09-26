@@ -15,8 +15,8 @@ class MatchesController < ApplicationController
 
     #currently only supports one to one with player and tournament, so may have to change this code
     #when things scale up. Probably have to edit playerqualifier to add tournament_id for double checking
-    @player1_picks = Playerqualifier.where("picked_player_id = ?", @player1.id)
-    @player2_picks = Playerqualifier.where("picked_player_id = ?", @player2.id)
+    @player1_picks = Matchset.where("picked_player_id = ?", @player1.id).only(:name, :difficulty, :level)
+    @player2_picks = Matchset.where("picked_player_id = ?", @player2.id).only(:name, :difficulty, :level)
     @matchsets = @match.matchsets.order("created_at ASC")
   end
 
