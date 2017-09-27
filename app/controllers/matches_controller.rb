@@ -48,6 +48,10 @@ class MatchesController < ApplicationController
   # PATCH/PUT /matches/1.json
   def update
     @match.winner_id = params[:winner_id]
+    @winner = Player.find(params[:winner_id])
+    @loser = Player.find(params[:loser_id])
+    @winner.update_match_score
+    @loser.update_match_score
     @match.save
     @match.submit
     respond_to do |format|
@@ -74,6 +78,6 @@ class MatchesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def match_params
-      params.require(:match).permit(:challonge_match_id, :tournament_id, :player1_id, :player2_id, :player1_score, :player2_score, :winner_id)
+      params.require(:match).permit(:challonge_match_id, :tournament_id, :player1_id, :player2_id, :player1_score, :player2_score, :winner_id, :loser_id)
     end
 end
