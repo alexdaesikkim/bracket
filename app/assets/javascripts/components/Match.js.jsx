@@ -80,17 +80,21 @@ var Match = React.createClass({
               <br/>
               <h3>{this.state.player1_score} - {this.state.player2_score}</h3>
               <br/>
-              <AddMatchSet player1={this.state.player1} player2={this.state.player2} p1_picks={this.state.p1_picks} p2_picks={this.state.p2_picks} match_id={this.state.match_id} addSetToMatch={addSet} />
             </div>
           </div>
           <div>
             {matchSets}
           </div>
+
+
           <br />
           <div>
             <center>
               {this.submitButton()}
             </center>
+          </div>
+          <div className="text-center">
+            <AddMatchSet player1={this.state.player1} player2={this.state.player2} p1_picks={this.state.p1_picks} p2_picks={this.state.p2_picks} match_id={this.state.match_id} addSetToMatch={addSet} />
           </div>
         </div>
       </div>

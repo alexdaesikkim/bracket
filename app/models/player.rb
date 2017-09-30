@@ -26,6 +26,18 @@ class Player < ApplicationRecord
     return self.qualifier_score
   end
 
+  def update_match_win
+    self.update_attributes(:wins => wins+1)
+  end
+
+  def update_match_loss
+    self.update_attributes(:losses => losses+1)
+    if self.losses == 2
+      #edge case: if player is in grand finals from winners, they may have 1 loss and still get knocked out
+      #maybe handle it from closing tournaments?
+    end
+  end
+
   def update_seed
     prev_score = self.qualifier_score
     new_score = self.calculate_score
