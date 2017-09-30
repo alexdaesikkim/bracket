@@ -30,6 +30,9 @@ gem 'bootstrap', '~> 4.0.0.beta'
 # Use rest-client
 gem 'rest-client'
 
+# Using Roo for Randomizer purposes
+gem 'roo', '~>2.7.0'
+
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
