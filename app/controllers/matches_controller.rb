@@ -47,11 +47,14 @@ class MatchesController < ApplicationController
   # PATCH/PUT /matches/1
   # PATCH/PUT /matches/1.json
   def update
-    @match.winner_id = params[:winner_id]
-    @winner = Player.find(params[:winner_id])
-    @loser = Player.find(params[:loser_id])
-    @winner.update_match_score
-    @loser.update_match_score
+    if(params[:tie] == "false")
+      puts "Winner detected, updating match"
+      @match.winner_id = params[:winner_id]
+      @winner = Player.find(params[:winner_id])
+      @loser = Player.find(params[:loser_id])
+      @winner.update_match_win
+      @loser.update_match_loss
+    end
     @match.save
     @match.submit
     respond_to do |format|

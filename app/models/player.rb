@@ -32,7 +32,7 @@ class Player < ApplicationRecord
 
   def update_match_loss
     self.update_attributes(:losses => losses+1)
-    if self.losses == 2
+    if (self.losses == 2)
       #edge case: if player is in grand finals from winners, they may have 1 loss and still get knocked out
       #maybe handle it from closing tournaments?
     end

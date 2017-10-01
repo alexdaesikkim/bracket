@@ -33,10 +33,14 @@ var Match = React.createClass({
 
   submitMatch(){
     var winner_id = (this.state.player1_score > this.state.player2_score) ? this.state.player1.id : this.state.player2.id;
+    var loser_id = (this.state.player1_score < this.state.player2_score) ? this.state.player1.id : this.state.player2.id;
+    var tie = (this.state.player1_score == this.state.player2_score) ? true : false
     $.ajax({
       method: 'PUT',
       data: {
-        winner_id: winner_id
+        winner_id: winner_id,
+        loser_id: loser_id,
+        tie: tie
       },
       url: '/matches/' + this.state.match_id + '.json',
       success: function(data){
