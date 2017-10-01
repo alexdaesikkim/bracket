@@ -9,9 +9,16 @@ var PreQualifiers = React.createClass({
         tournament_id: this.props.tournament_id
       },
       random:{
-        song_min: 0,
-        song_max: 20
+        min_level: this.props.game.min_level,
+        max_level: this.props.game.max_level,
       },
+      random_song:{
+        name: '',
+        difficulty: '',
+        level: '',
+        tournament_id: this.props.tournament_id
+      },
+      game_id: this.props.game.id,
       song_manual: false,
       song_random: false,
       errors: {}
@@ -36,8 +43,21 @@ var PreQualifiers = React.createClass({
     this.setState({qualifier: newSong});
   },
 
+  handleMinLevelChange(event){
+    var random = this.state.random;
+    random.min_level = event.target.value;
+    this.setState({random: random});
+  },
+
+  handleMaxLevelChange(event){
+    var random = this.state.random;
+    random.max_level = event.target.value;
+    this.setState({random: random});
+  },
+
   handleAddSong(){
     var that = this;
+    console.log("method has been called")
     $.ajax({
       method: 'POST',
       data: {
@@ -55,6 +75,12 @@ var PreQualifiers = React.createClass({
             level:'',
             tournament_id: that.props.tournament_id
           },
+          random_song:{
+            name:'',
+            difficulty:'',
+            level:'',
+            tournament_id: that.props.tournament_id
+          },
           errors: {},
         });
       },
@@ -64,7 +90,46 @@ var PreQualifiers = React.createClass({
     });
   },
 
-  handleAddSongManual(){
+  addRandomSong(){
+    this.setState({
+      qualifier: this.state.random_song
+    }, function(){
+      console.log("HI");
+      this.handleAddSong();
+    })
+  },
+
+  handleGetRandomSong(){
+    var that = this;
+    //todo: add "retrieving" view
+    $.ajax({
+      method: 'GET',
+      data: {
+        id: that.state.game_id,
+        min_level: that.state.random.min_level,
+        max_level: that.state.random.max_level
+      },
+      url: '/games/' + that.state.game_id + '/random.json',
+      success: function(data){
+        that.setState({
+          random_song:{
+            name: data.name,
+            difficulty: data.difficulty,
+            level: data.level,
+            tournament_id: that.state.random_song.tournament_id
+          },
+          errors: {},
+        });
+      },
+      error: function(error){
+        that.setState({errors: data.responseJSON.errors})
+      }
+    });
+    //set qualifier state
+    //add to qualifiers, using above code. voila!
+  },
+
+  handleAddSongManualForm(){
     if(this.state.song_manual == true){
       this.setState({song_manual: false});
     }
@@ -74,7 +139,7 @@ var PreQualifiers = React.createClass({
     }
   },
 
-  handleAddSongRandom(){
+  handleAddSongRandomForm(){
     if(this.state.song_random == true){
       this.setState({song_random: false});
     }
@@ -113,11 +178,29 @@ var PreQualifiers = React.createClass({
             <input type="number" className="form-control" id="level" value={this.state.qualifier.level} onChange={this.handleLevelChange} />
           </div>
           <br/>
-          <button className="btn btn-primary" onClick={this.handleAddSong}>Add Song</button>
+          <button className="btn btn-primary" onClick={this.handleAddSongManual}>Add Song</button>
         </div>
       );
     }
     else return null;
+  },
+
+  randomSongDisplay(){
+    if(this.state.random_song.name != ''){
+      return(
+        <div className="row">
+          <div className="col-12">
+            {this.state.random_song.name}
+          </div>
+          <div className="col-12">
+            {this.state.random_song.difficulty} {this.state.random_song.level}
+          </div>
+          <div className="col-12">
+            <button className="btn btn-primary" onClick={this.addRandomSong}>Add Song</button>
+          </div>
+        </div>
+      )
+    }
   },
 
   addRandomSongForm(){
@@ -126,12 +209,16 @@ var PreQualifiers = React.createClass({
         <div className="form-group">
           <div>
             Min Level:
-            <input type="number" className="form-control" id="name" value={this.state.random.min_level} />
+            <input type="number" className="form-control" id="name" value={this.state.random.min_level} onChange={this.handleMinLevelChange} />
           </div>
           <div>
             Max Level:
-            <input type="number" className="form-control" id="name" value={this.state.random.max_level} />
+            <input type="number" className="form-control" id="name" value={this.state.random.max_level} onChange={this.handleMaxLevelChange}/>
           </div>
+          <br/>
+          <button className="btn btn-primary" onClick={this.handleGetRandomSong}>Get Song</button>
+          <br/>
+          {this.randomSongDisplay()}
         </div>
       );
     }
@@ -149,9 +236,9 @@ var PreQualifiers = React.createClass({
 
     return (
       <div>
-        <button className="btn btn-primary" onClick={this.handleAddSongRandom}>Add Song (Random)</button>
+        <button className="btn btn-primary" onClick={this.handleAddSongRandomForm}>Add Song (Random)</button>
         &nbsp;
-        <button className="btn btn-primary" onClick={this.handleAddSongManual}>Add Song (Manual)</button>
+        <button className="btn btn-primary" onClick={this.handleAddSongManualForm}>Add Song (Manual)</button>
         <br/>
         {this.addManualSongForm()}
         {this.addRandomSongForm()}

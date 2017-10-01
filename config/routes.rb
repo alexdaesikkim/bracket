@@ -10,5 +10,6 @@ Rails.application.routes.draw do
   get '/tournaments/:id/start' => 'tournaments#start', as: :tournament_start
   get '/tournaments/:id/qualifier_start' => 'tournaments#qualifier_start', as: :tournament_qualifier_start, via: :tournament
   post '/playerqualifiers/update_qualifier/' => 'playerqualifiers#update_qualifier'
+  get '/games/:id/random' => 'games#random'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

@@ -1,5 +1,5 @@
 class GamesController < ApplicationController
-  before_action :set_game, only: [:show, :edit, :update, :destroy]
+  before_action :set_game, only: [:show, :edit, :update, :destroy, :random]
 
   # GET /games
   # GET /games.json
@@ -61,6 +61,18 @@ class GamesController < ApplicationController
     end
   end
 
+  def random
+    @pick = @game.randompick(params[:min_level], params[:max_level])
+    respond_to do |format|
+      format.json { render :json => {
+                                    :name => @pick[:name],
+                                    :level => @pick[:level],
+                                    :difficulty => @pick[:difficulty]
+                                  }
+                  }
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_game
@@ -69,6 +81,6 @@ class GamesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def game_params
-      params.require(:game).permit(:name, :version)
+      params.require(:game).permit(:min_level, :max_level, :game_id)
     end
 end

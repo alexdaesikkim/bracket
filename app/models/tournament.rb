@@ -3,6 +3,7 @@ require 'json'
 
 class Tournament < ApplicationRecord
   has_many :players
+  has_many :qualifiers
   belongs_to :game
 
   def reset_tournament
