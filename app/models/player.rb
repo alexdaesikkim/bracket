@@ -1,3 +1,6 @@
+require 'tournament'
+require 'json'
+
 class Player < ApplicationRecord
   belongs_to :tournament
   has_many :playermatches
@@ -27,14 +30,13 @@ class Player < ApplicationRecord
   end
 
   def update_match_win
-    self.update_attributes(:wins => wins+1)
+    self.update_attributes(:wins => self.wins+1)
   end
 
   def update_match_loss
-    self.update_attributes(:losses => losses+1)
+    self.update_attributes(:losses => self.losses+1)
     if (self.losses == 2)
-      #edge case: if player is in grand finals from winners, they may have 1 loss and still get knocked out
-      #maybe handle it from closing tournaments?
+      #figure out the logic for calculating placements
     end
   end
 

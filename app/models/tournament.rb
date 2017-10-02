@@ -12,6 +12,60 @@ class Tournament < ApplicationRecord
     puts "HI I HAVE BEEN RESET"
   end
 
+  def grab_placements(total_count)
+    placements = Array.new()
+    if(total_count <= 2)
+      return placements
+    end
+    power = 1
+    people = 1
+
+    while(power*2 < total_count)
+      power = power*2
+    end
+
+    power_of_2 = power
+
+    while(power != 2) #there was off by one error here due to case of if power*2 == total_count in earlier verison of code
+      placements.push(people)
+      placements.push(people)
+      people = people * 2
+      power = power/2
+    end
+    placements.push(people)
+    for x in 0...placements.size do
+      puts placements[x]
+    end
+    puts "BREAK"
+    power = power_of_2
+    rank = 3
+    placements.unshift(rank)
+    if(power*2 != total_count)
+      offset = total_count - power
+      power = power/2
+      puts offset
+      puts power
+      if(offset > power)
+        placements.push(offset - (power))
+      end
+    end
+    for x in 0...placements.size do
+      puts placements[x]
+    end
+
+    puts "BREAK"
+
+    for x in 1...placements.size do
+      placements[x] = placements[x] + rank;
+      rank = placements[x];
+    end
+    for x in 0...placements.size do
+      puts placements[x]
+    end
+    self.update_attributes(:placements => placements)
+    return true #why?
+  end
+
   def grab_match
     api = Challonge.new()
     raw_response = api.get_next_match(self.challonge_tournament_id)
