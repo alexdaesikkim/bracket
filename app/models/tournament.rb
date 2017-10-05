@@ -1,4 +1,4 @@
-require 'challonge'
+ require 'challonge'
 require 'json'
 
 class Tournament < ApplicationRecord
@@ -24,46 +24,36 @@ class Tournament < ApplicationRecord
       power = power*2
     end
 
-    power_of_2 = power
+    #power is now the highest power of 2 <= total_count
+    powerof2 = power
 
-    while(power != 2) #there was off by one error here due to case of if power*2 == total_count in earlier verison of code
+    while(power != 2)
       placements.push(people)
       placements.push(people)
       people = people * 2
       power = power/2
     end
-    placements.push(people)
-    for x in 0...placements.size do
-      puts placements[x]
-    end
-    puts "BREAK"
-    power = power_of_2
-    rank = 3
-    placements.unshift(rank)
-    if(power*2 != total_count)
-      offset = total_count - power
-      power = power/2
-      puts offset
-      puts power
-      if(offset > power)
-        placements.push(offset - (power))
-      end
-    end
-    for x in 0...placements.size do
-      puts placements[x]
+
+    #case 1. if player_count root 2 is integer, we need to push another round, aka "upper cap" under handwritten notes
+    #todo: transfer handwritten logic to separate note for online viewing
+    if(powerof2 == total_count)
+      placements.push(people)
     end
 
-    puts "BREAK"
+    rank = 3
+    placements.unshift(rank)
+
+    offset = total_count - powerof2
+
+    if(offset > powerof2/2)
+      placements.push(people)
+    end
 
     for x in 1...placements.size do
       placements[x] = placements[x] + rank;
       rank = placements[x];
     end
-    for x in 0...placements.size do
-      puts placements[x]
-    end
     self.update_attributes(:placements => placements)
-    return true #why?
   end
 
   def grab_match
@@ -93,6 +83,16 @@ class Tournament < ApplicationRecord
 
         match.challonge_match_id = r["match"]["id"]
         match.tournament_id = self.id
+        match.round = r["match"]["round"]
+
+        loss_count = player1.losses + player2.losses
+        if(round > 0)
+          match.bracket = "Winners Round " + match.round.to_s
+        elsif(round < 0)
+          match.bracket = "Losers Round " + (match.round*-1).to_s
+        else
+          match.bracket = "Grand Finals"
+        end
         match.player1_score = 0
         match.player2_score = 0
         match.save

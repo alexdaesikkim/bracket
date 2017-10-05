@@ -92,13 +92,14 @@ var Match = React.createClass({
 
 
           <br />
+          <br/>
+          <div className="text-center">
+            <AddMatchSet player1={this.state.player1} player2={this.state.player2} p1_picks={this.state.p1_picks} p2_picks={this.state.p2_picks} match_id={this.state.match_id} addSetToMatch={addSet} />
+          </div>
           <div>
             <center>
               {this.submitButton()}
             </center>
-          </div>
-          <div className="text-center">
-            <AddMatchSet player1={this.state.player1} player2={this.state.player2} p1_picks={this.state.p1_picks} p2_picks={this.state.p2_picks} match_id={this.state.match_id} addSetToMatch={addSet} />
           </div>
         </div>
       </div>
@@ -123,14 +124,46 @@ var AddMatchSet = React.createClass({
         match_id: this.props.match_id,
         picked_player_id: 0
       },
+      random_matchset:{
+        name: '',
+        level: '',
+        difficulty: '',
+        player1_score: 0,
+        player2_score: 0,
+        match_id: this.props.match_id,
+        picked_player_id: 0
+      },
       player_name: '',
-      player_picks: ''
+      player_picks: '',
+      player1_class: 'btn btn-player1',
+      player2_class: 'btn btn-player2'
     };
   },
 
   handleAddSetForm(){
     var bool = this.state.addset;
-    this.setState({addset: !bool});
+    //is it taxing to change states when not needed?
+    if(this.state.addset){
+      this.setState({
+        addset: false,
+        player1_class: 'btn btn-player1',
+        player2_class: 'btn btn-player2',
+        matchset: {
+          name: '',
+          level: '',
+          difficulty: '',
+          player1_score: 0,
+          player2_score: 0,
+          match_id: this.props.match_id,
+          picked_player_id: 0
+        },
+      });
+    }
+    else{
+      this.setState({
+        addset: true
+      });
+    }
   },
 
   handlePickedP1(){
@@ -138,7 +171,9 @@ var AddMatchSet = React.createClass({
     matchset.picked_player_id = this.state.player1.id;
     this.setState({
       matchset: matchset,
-      player_name: this.state.player1.name
+      player_name: this.state.player1.name,
+      player1_class: 'btn btn-player1-active',
+      player2_class: 'btn btn-player2'
     });
   },
 
@@ -147,7 +182,9 @@ var AddMatchSet = React.createClass({
     matchset.picked_player_id = this.state.player2.id;
     this.setState({
       matchset: matchset,
-      player_name: this.state.player2.name
+      player_name: this.state.player2.name,
+      player1_class: 'btn btn-player1',
+      player2_class: 'btn btn-player2-active'
     });
   },
 
@@ -204,6 +241,24 @@ var AddMatchSet = React.createClass({
     });
   },
 
+  getRandomSong(){
+
+  },
+
+  randomSong(){
+    if(this.state.random_matchset.name != ''){
+      return(
+        <div className="row">
+          <div className="col col-sm12 col-md6">
+            {this.state.random_matchset.name}
+            <br/>
+            {this.state.random_matchset.difficulty} {this.state.random_matchset.level}
+          </div>
+        </div>
+      )
+    }
+  },
+
   addSet(){
     if(this.state.matchset.picked_player_id != 0){
       return(
@@ -240,8 +295,9 @@ var AddMatchSet = React.createClass({
     }
     else return(
       <div>
-        <button className="btn btn-primary">Add Random Song (Not supported yet)</button>
+        <button className="btn btn-primary">Get Random Song (Not supported yet)</button>
         <br/>
+        {this.randomSong()}
         <br/>
     </div>
     );
@@ -251,9 +307,8 @@ var AddMatchSet = React.createClass({
     return(
       <div className= "center">
         <div className="btn-group" role="group" aria-label="Player ID">
-          <button type="button" className="btn btn-primary" onClick={this.handlePickedP1}>{this.state.player1.name}</button>
-          <button type="button" className="btn btn-warning" onClick={this.handlePickedRandom}>Random</button>
-          <button type="button" className="btn btn-primary" onClick={this.handlePickedP2}>{this.state.player2.name}</button>
+          <button type="button" className={this.state.player1_class} onClick={this.handlePickedP1}>{this.state.player1.name}</button>
+          <button type="button" className={this.state.player2_class} onClick={this.handlePickedP2}>{this.state.player2.name}</button>
         </div>
       </div>
     );
@@ -274,7 +329,7 @@ var AddMatchSet = React.createClass({
   render: function() {
     return (
       <div>
-        <button type="button" className="btn btn-primary" onClick={this.handleAddSetForm}>Add New Set</button>
+        <button type="button" className="btn btn-primary" onClick={this.handleAddSetForm}>Toggle New Set</button>
         <br/>
         <br/>
         {this.setForm()}

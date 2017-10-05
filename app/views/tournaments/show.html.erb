@@ -7,7 +7,19 @@
   <h5>Matches to be Played</h5>
   <ul class="list-group">
     <% @matches.each do |match| %>
-      <li class="list-group-item"> <%= link_to "#{match.name}", match_path(match) %></li>
+      <li class="list-group-item">
+        <div class="row">
+          <div class="col-9">
+            <%= link_to "#{match.name}", match_path(match) %>
+          </div>
+          <div class="col-2">
+            <span style={{float: 'right'}}> <%= match.bracket %> </span>
+          </div>
+          <div class="col-1">
+            <button class="btn btn-secondary">Notify</button>
+          </div>
+        </div>
+      </li>
     <% end %>
   </ul>
   <br>

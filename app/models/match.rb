@@ -27,6 +27,14 @@ class Match < ApplicationRecord
     self.update_attributes(:player1_score => p1_score, :player2_score => p2_score)
   end
 
+  def sort_round
+    if (round > 0)
+      return "A" + self.round.to_s
+    else
+      return "B" + (self.round*-1).to_s
+    end
+  end
+
   def submit
     winner = self.players.find(self.player1_id)
     if(self.player1_score < self.player2_score)

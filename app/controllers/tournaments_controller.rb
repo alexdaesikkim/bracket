@@ -21,7 +21,7 @@ class TournamentsController < ApplicationController
     @qualifiers = Qualifier.where("tournament_id = ?", @tournament.id)
     @tiebreaker_scores = @qualified.select(:qualifier_score).group(:qualifier_score).having("count(*) > 1")
     @tiebreaker = @qualified.select(:qualifier_score).group_by(&:qualifier_score).sort_by{|key, values| key}.to_json
-    @matches = Match.where("tournament_id = ? AND winner_id IS NULL", @tournament.id)
+    @matches = Match.where("tournament_id = ? AND winner_id IS NULL", @tournament.id).sort_by(&:sort_round)
     @finished_matches = Match.where("tournament_id = ? AND winner_id IS NOT NULL", @tournament.id)
   end
 

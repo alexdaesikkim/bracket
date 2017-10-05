@@ -11,4 +11,36 @@
  * It is generally better to create a new file per style scope.
  *
  */
-@import "bootstrap"
+@import "bootstrap";
+
+.btn-player1{
+  color: #009ee2;
+  border-color: #009ee2;
+  background-color: #ffffff;
+}
+
+.btn-player1:hover{
+  color: #ffffff;
+  background-color: #009ee2;
+}
+
+.btn-player1-active{
+  color: #ffffff;
+  background-color: #009ee2;
+}
+
+.btn-player2{
+  color: #ff0fa9;
+  border-color: #ff0fa9;
+  background-color: #ffffff;
+}
+
+.btn-player2:hover{
+  color: #ffffff;
+  background-color: #ff0fa9;
+}
+
+.btn-player2-active{
+  color: #ffffff;
+  background-color: #ff0fa9;
+}

@@ -19,8 +19,6 @@ var Not_Qualified = React.createClass({
   },
 
   checkQualifierFinished(){
-    //bug: i think this doesn't work for array of size one
-    //before checking, have to update the list for player_qualifiers with appropriate scores
     var check = this.state.player_qualifiers.reduce( function(base, pq){
       return (base && pq.submitted);
     }, true);
