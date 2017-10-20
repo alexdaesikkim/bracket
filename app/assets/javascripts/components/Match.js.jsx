@@ -9,7 +9,9 @@ var Match = React.createClass({
       player2_score: this.props.match.player2_score,
       p1_picks: this.props.player1_picks,
       p2_picks: this.props.player2_picks,
-      submitted: (this.props.match.winner_id !== null)
+      submitted: (this.props.match.winner_id !== null),
+      game_id: this.props.game_id
+      //need another function to check if all matches have been submitted?
     };
   },
 
@@ -32,8 +34,8 @@ var Match = React.createClass({
   },
 
   submitMatch(){
-    var winner_id = (this.state.player1_score > this.state.player2_score) ? this.state.player1.id : this.state.player2.id;
-    var loser_id = (this.state.player1_score < this.state.player2_score) ? this.state.player1.id : this.state.player2.id;
+    var winner_id = (this.state.player1_score > this.state.player2_score) ? this.state.player1 : this.state.player2.id;
+    var loser_id = (this.state.player1_score < this.state.player2_score) ? this.state.player1 : this.state.player2.id;
     var tie = (this.state.player1_score == this.state.player2_score) ? true : false
     $.ajax({
       method: 'PUT',
@@ -55,10 +57,55 @@ var Match = React.createClass({
     });
   },
 
+
   submitButton(){
     if((this.state.player1_score != this.state.player2_score) && !this.state.submitted){
+      var winner_name = (this.state.player1_score > this.state.player2_score) ? this.state.player1.name : this.state.player2.name;
+      var loser_name = (this.state.player1_score < this.state.player2_score) ? this.state.player1.name : this.state.player2.name;
+
+      var winner_score = (this.state.player1_score > this.state.player2_score) ? this.state.player1_score : this.state.player2_score;
+      var loser_score = (this.state.player1_score < this.state.player2_score) ? this.state.player1_score : this.state.player2_score;
+
       return(
-        <button type="button" className="btn btn-primary" onClick={this.submitMatch}>Finalize Match (Submit to Challonge)</button>
+        <div>
+          <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#submitModal">
+            Submit Match
+          </button>
+
+          <div className="modal fade" id="submitModal" tabIndex="-1" role="dialog" aria-labelledby="submitModalLabel" aria-hidden="true">
+            <div className="modal-dialog" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title" id="submitModalLabel">Confirmation</h5>
+                  <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div className="modal-body">
+                  <h5>
+                    The winner is:
+                    <br/>
+                    {winner_name}
+                    <br/>
+                    <br/>
+                    The score for this match is:
+                    <br/>
+                    {winner_name} - {winner_score}
+                    <br/>
+                    {loser_name} - {loser_score}
+                    <br/>
+                    <br/>
+                    Would you like to submit and finalize the match?
+                  </h5>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  <button type="button" className="btn btn-primary" onClick={this.submitMatch}>Finalize Match</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       );
     }
   },
@@ -66,7 +113,7 @@ var Match = React.createClass({
   render: function() {
     var addSet = this.handleAddSet;
     var updateSet = this.handleScoreUpdate;
-    var that = this
+    var that = this;
     var matchSets = this.state.matchsets.map( function(set) {
       return (
         <Sets set={set} key={"set_"+set.id} submitted = {that.state.submitted} updateScore={updateSet} />
@@ -94,7 +141,7 @@ var Match = React.createClass({
           <br />
           <br/>
           <div className="text-center">
-            <AddMatchSet player1={this.state.player1} player2={this.state.player2} p1_picks={this.state.p1_picks} p2_picks={this.state.p2_picks} match_id={this.state.match_id} addSetToMatch={addSet} />
+            <AddMatchSet player1={this.state.player1} player2={this.state.player2} p1_picks={this.state.p1_picks} p2_picks={this.state.p2_picks} match_id={this.state.match_id} game_id={this.state.game_id} addSetToMatch={addSet} />
           </div>
           <div>
             <center>
@@ -102,237 +149,6 @@ var Match = React.createClass({
             </center>
           </div>
         </div>
-      </div>
-    );
-  }
-});
-
-var AddMatchSet = React.createClass({
-  getInitialState() {
-    return {
-      addset: false,
-      player1: this.props.player1,
-      player2: this.props.player2,
-      p1_picks: this.props.p1_picks,
-      p2_picks: this.props.p2_picks,
-      matchset: {
-        name: '',
-        level: '',
-        difficulty: '',
-        player1_score: 0,
-        player2_score: 0,
-        match_id: this.props.match_id,
-        picked_player_id: 0
-      },
-      random_matchset:{
-        name: '',
-        level: '',
-        difficulty: '',
-        player1_score: 0,
-        player2_score: 0,
-        match_id: this.props.match_id,
-        picked_player_id: 0
-      },
-      player_name: '',
-      player_picks: '',
-      player1_class: 'btn btn-player1',
-      player2_class: 'btn btn-player2'
-    };
-  },
-
-  handleAddSetForm(){
-    var bool = this.state.addset;
-    //is it taxing to change states when not needed?
-    if(this.state.addset){
-      this.setState({
-        addset: false,
-        player1_class: 'btn btn-player1',
-        player2_class: 'btn btn-player2',
-        matchset: {
-          name: '',
-          level: '',
-          difficulty: '',
-          player1_score: 0,
-          player2_score: 0,
-          match_id: this.props.match_id,
-          picked_player_id: 0
-        },
-      });
-    }
-    else{
-      this.setState({
-        addset: true
-      });
-    }
-  },
-
-  handlePickedP1(){
-    var matchset = this.state.matchset;
-    matchset.picked_player_id = this.state.player1.id;
-    this.setState({
-      matchset: matchset,
-      player_name: this.state.player1.name,
-      player1_class: 'btn btn-player1-active',
-      player2_class: 'btn btn-player2'
-    });
-  },
-
-  handlePickedP2(){
-    var matchset = this.state.matchset;
-    matchset.picked_player_id = this.state.player2.id;
-    this.setState({
-      matchset: matchset,
-      player_name: this.state.player2.name,
-      player1_class: 'btn btn-player1',
-      player2_class: 'btn btn-player2-active'
-    });
-  },
-
-  handlePickedRandom(){
-    var matchset = this.state.matchset;
-    matchset.picked_player_id = 0;
-    this.setState({matchset: matchset});
-  },
-
-  handleSongNameChange(event){
-    var matchset = this.state.matchset;
-    matchset.name = event.target.value;
-    this.setState({matchset: matchset});
-  },
-
-  handleSongLevelChange(event){
-    var matchset = this.state.matchset;
-    matchset.level = event.target.value;
-    this.setState({matchset: matchset});
-  },
-
-  handleSongDifficultyChange(event){
-    var matchset = this.state.matchset;
-    matchset.difficulty = event.target.value;
-    this.setState({matchset: matchset});
-  },
-
-  handleAddSet(){
-    var that = this;
-    $.ajax({
-      method: 'POST',
-      data: {
-        matchset: that.state.matchset
-      },
-      url: '/matchsets.json',
-      success: function(data){
-        that.props.addSetToMatch(data);
-        that.setState({
-          addset: false,
-          matchset: {
-            name: '',
-            level: '',
-            difficulty: '',
-            player1_score: 0,
-            player2_score: 0,
-            picked_player_id: 0,
-            match_id: that.props.match_id
-          }
-        });
-      },
-      error: function(error){
-        that.setState({errors: data.responseJSON.errors})
-      }
-    });
-  },
-
-  getRandomSong(){
-
-  },
-
-  randomSong(){
-    if(this.state.random_matchset.name != ''){
-      return(
-        <div className="row">
-          <div className="col col-sm12 col-md6">
-            {this.state.random_matchset.name}
-            <br/>
-            {this.state.random_matchset.difficulty} {this.state.random_matchset.level}
-          </div>
-        </div>
-      )
-    }
-  },
-
-  addSet(){
-    if(this.state.matchset.picked_player_id != 0){
-      return(
-        <div className="row">
-          <div className="col-sm-12 col-md-6">
-            <div className="form-group text-justify">
-              <div>
-                Song Name:
-                <input type="text" className="form-control input-sm" id="name" value={this.state.matchset.name} onChange={this.handleSongNameChange} />
-              </div>
-              <div>
-                Song Level:
-                <input type="text" className="form-control input-sm" id="level" value={this.state.matchset.level} onChange={this.handleSongLevelChange} />
-              </div>
-              <div>
-                Song Difficulty:
-                <input type="text" className="form-control input-sm" id="difficulty" value={this.state.matchset.difficulty} onChange={this.handleSongDifficultyChange} />
-              </div>
-              <br/>
-            </div>
-          </div>
-          <div className="col-sm-12 col-md-6 text-justify">
-            {this.state.player_name + "'"}s picks:
-          </div>
-          <div className="col-12">
-            <div className="text-center">
-              <button className="btn btn-primary" onClick={this.handleAddSet}>Add Set</button>
-            </div>
-          </div>
-          <br/>
-          <br/>
-        </div>
-      );
-    }
-    else return(
-      <div>
-        <button className="btn btn-primary">Get Random Song (Not supported yet)</button>
-        <br/>
-        {this.randomSong()}
-        <br/>
-    </div>
-    );
-  },
-
-  optionButtonGroup(){
-    return(
-      <div className= "center">
-        <div className="btn-group" role="group" aria-label="Player ID">
-          <button type="button" className={this.state.player1_class} onClick={this.handlePickedP1}>{this.state.player1.name}</button>
-          <button type="button" className={this.state.player2_class} onClick={this.handlePickedP2}>{this.state.player2.name}</button>
-        </div>
-      </div>
-    );
-  },
-
-  setForm(){
-    if(this.state.addset){
-      return(
-        <div>
-          {this.optionButtonGroup()}
-          <br/>
-          {this.addSet()}
-        </div>
-      );
-    }
-  },
-
-  render: function() {
-    return (
-      <div>
-        <button type="button" className="btn btn-primary" onClick={this.handleAddSetForm}>Toggle New Set</button>
-        <br/>
-        <br/>
-        {this.setForm()}
       </div>
     );
   }

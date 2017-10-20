@@ -18,6 +18,7 @@ class MatchesController < ApplicationController
     @player1_picks = Matchset.where("picked_player_id = ?", @player1.id).only(:name, :difficulty, :level)
     @player2_picks = Matchset.where("picked_player_id = ?", @player2.id).only(:name, :difficulty, :level)
     @matchsets = @match.matchsets.order("created_at ASC")
+    @game_id = @match.tournament.game_id
   end
 
   # GET /matches/new

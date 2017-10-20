@@ -13,6 +13,22 @@
  */
 @import "bootstrap";
 
+.card-header-player1{
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 0;
+  background: linear-gradient(to left, #ffffff, #009ee2);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+/* seriously, why does scss work here but not in individual ones? */
+
+.card-header-player2{
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 0;
+  background: linear-gradient(90deg, #ffffff, #ff0fa9);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
 .btn-player1{
   color: #009ee2;
   border-color: #009ee2;
@@ -43,4 +59,15 @@
 .btn-player2-active{
   color: #ffffff;
   background-color: #ff0fa9;
+}
+
+.card-header-player1{
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 0;
+  background-color: linear-gradient(to right, #ffffff, #ff0fa9);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.card-header-player2{
+  color: linear-gradient(to right, #ffffff, #ff0fa9)
 }

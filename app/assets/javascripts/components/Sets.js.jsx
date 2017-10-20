@@ -5,6 +5,7 @@ var Sets = React.createClass({
       saved: this.props.set.saved,
       player1_score: this.props.set.player1_score,
       player2_score: this.props.set.player2_score,
+      card_header: ((this.props.set.player1_score == this.props.set.player2_score) ? 'card-header' : (this.props.set.player1_score > this.props.set.player2_score ? 'card-header-player1' : 'card-header-player2')),
       submitted: this.props.submitted,
       player1_check: ((this.props.set.player1_score > this.props.set.player2_score) && this.props.set.saved ? '✓' : ''),
       player2_check: ((this.props.set.player1_score < this.props.set.player2_score) && this.props.set.saved ? '✓' : '')
@@ -77,7 +78,7 @@ var Sets = React.createClass({
     return (
     <div>
       <div className="card">
-        <div className="card-header" role="tab" id= {"set_heading_"+this.state.set.id} >
+        <div className={this.state.card_header} role="tab" id= {"set_heading_"+this.state.set.id} >
           <div className="row">
             <div className="col-1 text-center">
               <h5>
@@ -146,8 +147,6 @@ var SetScore = React.createClass({
       },
       url: '/matchsets/' + this.props.setId + '.json',
       success: function(data){
-        console.log(data.saved)
-        //if data.saved returns true then update score
         if(data.saved){
           that.setState({
             saved: true
