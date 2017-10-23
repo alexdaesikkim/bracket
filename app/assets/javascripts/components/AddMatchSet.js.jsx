@@ -30,7 +30,7 @@ var AddMatchSet = React.createClass({
       player_picks: '',
       player1_class: 'btn btn-player1',
       player2_class: 'btn btn-player2',
-      random_class: 'btn btn-warning',
+      random_class: 'btn btn-random-active',
       min_level: 0,
       max_level: 0
     };
@@ -45,6 +45,7 @@ var AddMatchSet = React.createClass({
         random: false,
         player1_class: 'btn btn-player1',
         player2_class: 'btn btn-player2',
+        random_class: 'btn btn-random-active',
         matchset: {
           name: '',
           level: '',
@@ -82,7 +83,8 @@ var AddMatchSet = React.createClass({
       matchset: matchset,
       player_name: this.state.player1.name,
       player1_class: 'btn btn-player1-active',
-      player2_class: 'btn btn-player2'
+      player2_class: 'btn btn-player2',
+      random_class: 'btn btn-random'
     });
   },
 
@@ -93,14 +95,20 @@ var AddMatchSet = React.createClass({
       matchset: matchset,
       player_name: this.state.player2.name,
       player1_class: 'btn btn-player1',
-      player2_class: 'btn btn-player2-active'
+      player2_class: 'btn btn-player2-active',
+      random_class: 'btn btn-random'
     });
   },
 
   handlePickedRandom(){
     var matchset = this.state.matchset;
     matchset.picked_player_id = 0;
-    this.setState({matchset: matchset});
+    this.setState({
+      matchset: matchset,
+      player1_class: 'btn btn-player1',
+      player2_class: 'btn btn-player2',
+      random_class: 'btn btn-random-active'
+    });
   },
 
   handleButtonRandomAuto(){
@@ -253,6 +261,7 @@ var AddMatchSet = React.createClass({
             Max Level:
             <br/>
             <input type="number" className="form-control input-sm" id="max_level" value={this.state.max_level} onChange={this.handleMaxLevelChange}></input>
+            <br/>
             <button className="btn btn-primary" onClick={this.getRandomSong}>Grab Song</button>
             <br/>
             <br/>

@@ -61,13 +61,18 @@
   background-color: #ff0fa9;
 }
 
-.card-header-player1{
-  padding: 0.75rem 1.25rem;
-  margin-bottom: 0;
-  background-color: linear-gradient(to right, #ffffff, #ff0fa9);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+.btn-random{
+  color: #000000;
+  border-color: #e6e600;
+  background-color: #ffffff;
 }
 
-.card-header-player2{
-  color: linear-gradient(to right, #ffffff, #ff0fa9)
+.btn-random:hover{
+  color: #000000;
+  background-color: #e6e600;
+}
+
+.btn-random-active{
+  color: #000000;
+  background-color: #e6e600;
 }
