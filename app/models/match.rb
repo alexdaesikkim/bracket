@@ -28,7 +28,7 @@ class Match < ApplicationRecord
   end
 
   def sort_round
-    if (round > 0)
+    if (self.round > 0)
       return "A" + self.round.to_s
     else
       return "B" + (self.round*-1).to_s

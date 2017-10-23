@@ -86,9 +86,9 @@ class Tournament < ApplicationRecord
         match.round = r["match"]["round"]
 
         loss_count = player1.losses + player2.losses
-        if(round > 0)
+        if(match.round > 0)
           match.bracket = "Winners Round " + match.round.to_s
-        elsif(round < 0)
+        elsif(match.round < 0)
           match.bracket = "Losers Round " + (match.round*-1).to_s
         else
           match.bracket = "Grand Finals"
